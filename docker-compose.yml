@@ -1,0 +1,44 @@
+services:
+  app:
+    build: ./Front-End/
+    ports:
+      - 5173:5173
+    volumes:
+      - ./Front-End:/app
+      - /app/node_modules
+
+  php:
+    build:
+      dockerfile: ./Back-End/docker/Dockerfile
+      target: php
+    working_dir: /var/www/html
+    command: symfony serve --listen-ip=0.0.0.0 --no-tls
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ./Back-End/:/var/www/html
+
+  db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3506:3306
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 9988:80
+    environment:
+      - PMA_HOST=${PMA_HOST}
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+volumes:
+  db_data:
