@@ -6,13 +6,21 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  async function listGarage() {
+
+  async function listGarageFromBackend() {
     const garage = await fetch('http://localhost:8000/garage');
     const data = await garage.json();
     console.log(data.garage[0]);
   }
 
-  listGarage();
+  async function listVehicleFromFakeapi() {
+    const garage = await fetch('http://localhost:3000/vehicle');
+    const data = await garage.json();
+    console.log(data);
+  }
+
+  listGarageFromBackend();
+  listVehicleFromFakeapi();
 
   return (
     <>

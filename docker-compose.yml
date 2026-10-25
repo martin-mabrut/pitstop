@@ -7,6 +7,15 @@ services:
       - ./Front-End:/app
       - /app/node_modules
 
+  fakeapi:
+    build: ./Front-End/
+    ports:
+      - 3000:3000
+    volumes:
+      - ./Front-End:/app
+      - /app/node_modules
+    command: npx json-server db.json --host 0.0.0.0
+
   php:
     build:
       dockerfile: ./Back-End/docker/Dockerfile
