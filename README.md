@@ -16,9 +16,6 @@ depuis /Back-End pour exécuter les commandes symfony
 composer install 
 pour avoir les librairies
 
-symfony console make:migration
-pour faire la migration
-
 symfony console d:m:m
 pour créer la base de données
 
