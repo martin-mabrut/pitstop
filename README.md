@@ -16,6 +16,9 @@ depuis /Back-End pour exécuter les commandes symfony
 composer install 
 pour avoir les librairies
 
+php bin/console lexik:jwt:generate-keypair
+pour avoir les clés ssl pour lexik
+
 symfony console d:m:m
 pour créer la base de données
 
