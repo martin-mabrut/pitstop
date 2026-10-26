@@ -5,7 +5,6 @@ import { AuthProvider } from './contexts/AuthProvider'
 import AppRoutes from './AppRoutes'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   async function listGarageFromBackend() {
     const garage = await fetch('http://localhost:8000/garage');
