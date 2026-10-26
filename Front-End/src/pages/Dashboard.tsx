@@ -33,7 +33,7 @@ export default function Dashboard() {
 
     return (
         <div>
-             <h1>Mes véhicules</h1>
+            <h1>Mes véhicules</h1>
 
             <form onSubmit={handleAdd}>
                 <input name="brand" placeholder="Marque" required />
