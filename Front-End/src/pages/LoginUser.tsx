@@ -8,8 +8,7 @@ export default function Login() {
         event?.preventDefault();
         const email = event?.target?.email?.value;
         const password = event?.target?.password?.value;
-        login();
-        // login({ email, password });
+        login({ email, password });
     }
     return (
         <div>

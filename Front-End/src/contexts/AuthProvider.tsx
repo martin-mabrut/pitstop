@@ -9,17 +9,17 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(localStorage.getItem(USER_KEY));
 
-    const login = async () => {
-        //Ajouter data en params
+    const login = async (data) => {
+
         try {
             const response = await fetch(
-                'http://localhost:3000/User/1',
+                'http://localhost:3000/User',
                 {
-                    method: "GET",
-                    // headers: {
-                    //     "Content-Type": "application/json",
-                    // },
-                    // body: JSON.stringify(data)
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data)
                 }
             );
             const result = await response.json();
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem(USER_KEY, JSON.stringify(result));
                 console.log(user);
                 <Navigate
-                    to={`/Dashboard`}
+                    to={`{/Dashboard}`}
                     replace
                 />;
             }
