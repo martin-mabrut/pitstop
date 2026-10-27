@@ -7,12 +7,12 @@ export const SafetyInspectionProvider = ({ children }) => {
 
     const [safetyList, setSafetyList] = useState([]);
 
-    const getSafetyInspections = async () => {
+    const safetyInspectionDashboard = async () => {
         try {
             const response = await fetch(
-                'http://localhost:3000/safetyInspection/',
+                'http://localhost:8000/api/safetyInspection/1',
                 {
-                    // credentials: 'include',
+                    credentials: 'include',
                     method: "Get",
                     headers: {
                         "Content-Type": "application/json",
@@ -20,7 +20,6 @@ export const SafetyInspectionProvider = ({ children }) => {
                 }
             );
             const safetyInspectionList = await response.json();
-            console.log(safetyInspectionList);
             if (safetyInspectionList) {
 
                 // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
