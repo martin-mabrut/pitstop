@@ -7,29 +7,29 @@ const TOKEN = "token";
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(localStorage.getItem(TOKEN));
 
-    const signin = async (data) => {
+  const signin = async (data) => {
 
-        try {
-            const response = await fetch(
-                'http://localhost:8000/api/register',
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data)
-                }
-            );
-            const result = await response.json();
-            if (result) {
-                console.log(result);
-            }
-        } catch (error) {
-            console.log(error);
+    try {
+      const response = await fetch(
+        'http://localhost:8000/api/register',
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
         }
-
+      );
+      const result = await response.json();
+      if (result) {
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  };
+
+  }
+
 
   const login = async (data) => {
     try {
