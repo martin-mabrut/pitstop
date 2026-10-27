@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
+import { useSafety } from '../contexts/SafetyInspectionProvider'
 import AddVehicle from '../components/modal/addVehicle';
 import EditVehicle from '../components/modal/editVehicle';
 import DeleteVehicle from '../components/modal/deleteVehicle';
@@ -11,6 +12,10 @@ export default function Dashboard() {
     const [editing, setEditing] = useState<Vehicle | null>(null);
     const [deleting, setDeleting] = useState<Vehicle | null>(null);
 
+    const { getSafetyInspections, safetyList } = useSafety();
+
+    useEffect(() => {
+        getVehicle(); getSafetyInspections();
     useEffect(function () {
         getVehicle();
     }, []);
@@ -42,6 +47,16 @@ export default function Dashboard() {
                 })}
             </ul>
 
+            <div>
+                <h2>Mes échéances</h2>
+                <ul>
+                    {safetyList.map((ct) => (
+                        <li key={ct.id}>
+                            {ct.dueTime}
+                        </li>
+                    ))}
+                </ul>
+            </div>
             {showAdd && (
                 <AddVehicle onClose={function () { setShowAdd(false); }} />
             )}

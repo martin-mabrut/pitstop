@@ -1,4 +1,33 @@
 lexik_jwt_authentication:
-    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
-    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
-    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    secret_key: "%env(resolve:JWT_SECRET_KEY)%"
+    public_key: "%env(resolve:JWT_PUBLIC_KEY)%"
+    pass_phrase: "%env(JWT_PASSPHRASE)%"
+    # token encoding/decoding settings
+    encoder:
+        # token encoder/decoder service - default implementation based on the lcobucci/jwt library
+        service: lexik_jwt_authentication.encoder.lcobucci
+
+        # encryption algorithm used by the encoder service
+        signature_algorithm: RS256
+
+    # # token extraction settings
+    # token_extractors:
+    #     cookie:
+    #         enabled: false
+    #         name: BEARER
+
+    #     # check token in a cookie
+    #     split_cookie:
+    #         enabled: false
+    #         cookies:
+    #             - jwt_hp
+    #             - jwt_s
+    # set_cookies:
+    #     BEARER: ~
+    # # remove the token from the response body when using cookies
+    # remove_token_from_body_when_cookies_used: true
+
+    # # invalidate the token on logout by storing it in the cache
+    # blocklist_token:
+    #     enabled: true
+    #     cache: cache.app

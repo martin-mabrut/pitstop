@@ -15,7 +15,17 @@ class SafetyInspectionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, SafetyInspection::class);
     }
-
+    
+    public function findAllFromAVehicle(int $id): array
+    {
+        return $this->createQueryBuilder('s')
+        ->join('s.vehicle', 'v')
+        ->where('v.id = :id')
+        ->setParameter('id', $id)
+        ->orderBy('s.dueTimeAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+    }
 //    /**
 //     * @return SafetyInspection[] Returns an array of SafetyInspection objects
 //     */
