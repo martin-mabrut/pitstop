@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './contexts/AuthProvider'
 import AppRoutes from './AppRoutes'
 import { VehicleProvider } from './contexts/VehicleProvider'
+import { SafetyInspectionProvider } from './contexts/SafetyInspectionProvider'
 
 
 function App() {
@@ -14,11 +15,13 @@ function App() {
     <>
       <div>
         <AuthProvider>
-          <VehicleProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </VehicleProvider>
+          <SafetyInspectionProvider>
+            <VehicleProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </VehicleProvider>
+          </SafetyInspectionProvider>
         </AuthProvider>
       </div>
     </>
