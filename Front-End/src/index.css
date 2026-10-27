@@ -2,7 +2,7 @@
   /* Couleurs */
   --color-red: #d21c10;
   --color-white: #f1fbfc;
-  --color-grey: #8ea4ad;
+  --color-grey: #72838a;
   --color-black: #232322;
   --color-yellow: #ffc700;
   --color-green: #4bca1c;
@@ -22,4 +22,31 @@
 
 body {
   margin: 0;
+}
+
+/* Boutons Bootstrap aux couleurs du projet */
+.btn-secondary {
+  --bs-btn-color: var(--color-white);
+  --bs-btn-bg: var(--color-grey);
+  --bs-btn-border-color: var(--color-grey);
+  --bs-btn-hover-color: var(--color-white);
+  --bs-btn-hover-bg: var(--color-grey);
+  --bs-btn-hover-border-color: var(--color-grey);
+  --bs-btn-active-color: var(--color-white);
+  --bs-btn-active-bg: var(--color-grey);
+  --bs-btn-active-border-color: var(--color-grey);
+  transition: none;
+}
+
+.btn-danger {
+  --bs-btn-color: var(--color-white);
+  --bs-btn-bg: var(--color-red);
+  --bs-btn-border-color: var(--color-red);
+  --bs-btn-hover-color: var(--color-white);
+  --bs-btn-hover-bg: var(--color-red);
+  --bs-btn-hover-border-color: var(--color-red);
+  --bs-btn-active-color: var(--color-white);
+  --bs-btn-active-bg: var(--color-red);
+  --bs-btn-active-border-color: var(--color-red);
+  transition: none;
 }
