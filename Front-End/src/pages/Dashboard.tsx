@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
+import { useSafety } from '../contexts/SafetyInspectionProvider'
 
 export default function Dashboard() {
     const { vehicles, getVehicle, deleteVehicle, updateVehicle, addVehicle } = useVehicle();
 
+    const { getSafetyInspections, safetyList } = useSafety();
+
     useEffect(() => {
-        getVehicle();
+        getVehicle(); getSafetyInspections();
     }, []);
 
     const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -33,7 +36,7 @@ export default function Dashboard() {
 
     return (
         <div>
-             <h1>Mes véhicules</h1>
+            <h1>Mes véhicules</h1>
 
             <form onSubmit={handleAdd}>
                 <input name="brand" placeholder="Marque" required />
@@ -51,6 +54,17 @@ export default function Dashboard() {
                     </li>
                 ))}
             </ul>
+
+            <div>
+                <h2>Mes échéances</h2>
+                <ul>
+                    {safetyList.map((ct) => (
+                        <li key={ct.id}>
+                            {ct.dueTime}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }
