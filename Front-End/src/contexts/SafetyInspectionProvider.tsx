@@ -7,7 +7,7 @@ export const SafetyInspectionProvider = ({ children }) => {
 
     const [safetyList, setSafetyList] = useState([]);
 
-    const safetyInspectionDashboard = async () => {
+    const getSafetyInspections = async () => {
         try {
             const response = await fetch(
                 'http://localhost:8000/api/safetyInspection/1',
