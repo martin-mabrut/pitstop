@@ -15,8 +15,8 @@ final class SafetyInspectionController extends AbstractController
     public function __construct(private Security $security)
     {
     }
-    #[Route('/api/safetyInspection/{id}', name: 'api_safety_inspection')]
-    public function findAll($id, SafetyInspectionRepository $safetyInspectionRepository, Request $request, VehicleRepository $vehicleRepository): Response
+    #[Route('/api/safetyInspection/All/{id}', name: 'api_safety_inspection_all')]
+    public function findAll(int $id, SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository): Response
     {
         $user = $this->security->getUser(); 
         $vehicle = $vehicleRepository->find($id);
@@ -27,6 +27,13 @@ final class SafetyInspectionController extends AbstractController
             return new Response("Invalid credentials", 403);
         }
         $safetyInspections = $safetyInspectionRepository->findAllFromAVehicle($id);
+        return $this->json(['safetyInspections'=>$safetyInspections],200,[],['groups'=>['safety:read']]);
+    }
+
+    #[Route('/api/safetyInspection/{id}', name: 'api_safety_inspection')]
+    public function findWithId(int $id, SafetyInspectionRepository $safetyInspectionRepository): Response
+    {
+        $safetyInspections = $safetyInspectionRepository->find($id);
         return $this->json(['safetyInspections'=>$safetyInspections],200,[],['groups'=>['safety:read']]);
     }
 }

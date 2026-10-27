@@ -1,8 +1,8 @@
-import React from 'react';
-import { useAuth } from '../contexts/AuthProvider';
+import React from "react";
+import { useAuth } from "../contexts/AuthProvider";
 
 export default function Login() {
-    const { login } = useAuth();
+  const { login } = useAuth();
 
     const handleSubmit = (event) => {
         event?.preventDefault();
