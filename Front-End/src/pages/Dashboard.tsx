@@ -1,58 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
 import { useSafety } from '../contexts/SafetyInspectionProvider'
+import AddVehicle from '../components/modal/addVehicle';
+import EditVehicle from '../components/modal/editVehicle';
+import DeleteVehicle from '../components/modal/deleteVehicle';
 
 export default function Dashboard() {
-    const { vehicles, getVehicle, deleteVehicle, updateVehicle, addVehicle } = useVehicle();
+    const { vehicles, getVehicle, updateVehicle, deleteVehicle } = useVehicle();
+    const [showAdd, setShowAdd] = useState(false);
+    const [editing, setEditing] = useState<Vehicle | null>(null);
+    const [deleting, setDeleting] = useState<Vehicle | null>(null);
 
     const { getSafetyInspections, safetyList } = useSafety();
 
     useEffect(() => {
         getVehicle(); getSafetyInspections();
+    useEffect(function () {
+        getVehicle();
     }, []);
-
-    const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        const data = new FormData(form);
-        await addVehicle({
-            brand: data.get('brand') as string,
-            model: data.get('model') as string,
-        });
-        form.reset();
-    };
-
-
-    const handleUpdate = async (vehicle: Vehicle) => {
-        await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
-    };
-
-    // SUPPRIMER
-    const handleDelete = async (id: Vehicle['id']) => {
-        await deleteVehicle(id);
-    };
 
 
     return (
         <div>
             <h1>Mes véhicules</h1>
 
-            <form onSubmit={handleAdd}>
-                <input name="brand" placeholder="Marque" required />
-                <input name="model" placeholder="Modele" required />
-                <button type="submit">Ajouter</button>
-            </form>
+            <button onClick={function () { setShowAdd(true); }}>
+                Ajouter un véhicule
+            </button>
 
-            <h1>Mes véhicules</h1>
             <ul>
-                {vehicles.map((v) => (
-                    <li key={v.id}>
-                        <Link to={`/vehicle/${v.id}`}>{v.brand} {v.model}</Link>
-                        <button onClick={() => handleUpdate(v)}>Modifier</button>
-                        <button onClick={function () { handleDelete(v.id); }}>Supprimer</button>
-                    </li>
-                ))}
+                {vehicles.map(function (v) {
+                    return (
+                        <li key={v.id}>
+                            <Link to={`/vehicle/${v.id}`}>
+                                {v.brand} {v.model}
+                            </Link>
+                            <button onClick={function () { setEditing(v); }}>
+                                Modifier
+                            </button>
+                            <button onClick={function () { setDeleting(v); }}>
+                                Supprimer
+                            </button>
+                        </li>
+                    );
+                })}
             </ul>
 
             <div>
@@ -65,6 +57,23 @@ export default function Dashboard() {
                     ))}
                 </ul>
             </div>
+            {showAdd && (
+                <AddVehicle onClose={function () { setShowAdd(false); }} />
+            )}
+
+            {editing && (
+                <EditVehicle
+                    vehicle={editing}
+                    onClose={function () { setEditing(null); }}
+                />
+            )}
+
+            {deleting && (
+                <DeleteVehicle
+                    vehicle={deleting}
+                    onClose={function () { setDeleting(null); }}
+                />
+            )}
         </div>
     );
 }
