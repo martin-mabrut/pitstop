@@ -1,0 +1,41 @@
+import './CardSafetyInspection.css'
+
+export interface SafetyInspection {
+  id: string | number
+  type: string
+  dueTime: string
+  isDone?: string
+}
+
+interface CardSafetyInspectionProps {
+  inspection: SafetyInspection
+}
+
+function formatDate(date?: string) {
+  return date ? new Date(date).toLocaleDateString('fr-FR') : '-'
+}
+
+function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
+  return (
+    <div className="card-safety">
+      <div className="row align-items-center">
+        <div className="col-auto">
+          <div className="card-safety__lights">
+            <span className="card-safety__light card-safety__light--red" />
+            <span className="card-safety__light card-safety__light--yellow" />
+            <span className="card-safety__light card-safety__light--green" />
+          </div>
+        </div>
+
+        <div className="col">
+          <h3>Contrôle technique</h3>
+          <p>Type : {inspection.type}</p>
+          <p>Échéance : {formatDate(inspection.dueTime)}</p>
+          <p>Réalisé le : {formatDate(inspection.isDone)}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CardSafetyInspection
