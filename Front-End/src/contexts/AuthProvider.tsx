@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/User", {
+      const response = await fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
