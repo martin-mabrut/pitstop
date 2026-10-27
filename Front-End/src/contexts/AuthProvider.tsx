@@ -45,8 +45,13 @@ export const AuthProvider = ({ children }) => {
                 }
             );
             const result = await response.json();
-            console.log(result);
-
+            if (result) {
+                setUser(result)
+                //rajouer.user
+                localStorage.setItem(USER_KEY, JSON.stringify(result));
+                console.log(user);
+            }
+            throw new Error(result.message);
         } catch (error) {
             console.log(error);
         }
