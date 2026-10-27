@@ -26,6 +26,25 @@ class SafetyInspectionRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+
+    public function findLastTwo(int $limit):array
+    {
+        return $this->createQueryBuilder('s')
+        ->orderBy('s.dueTimeAt', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findLastNotDone():array
+    {
+        return $this->createQueryBuilder('s')
+        ->orderBy('s.dueTimeAt', 'DESC')
+        ->where('s.doneAt is NULL')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
 //    /**
 //     * @return SafetyInspection[] Returns an array of SafetyInspection objects
 //     */
