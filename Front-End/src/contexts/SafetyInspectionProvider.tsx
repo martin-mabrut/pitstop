@@ -12,7 +12,7 @@ export const SafetyInspectionProvider = ({ children }) => {
             const response = await fetch(
                 'http://localhost:3000/safetyInspection/',
                 {
-                    // credentials: 'include',
+                    credentials: 'include',
                     method: "Get",
                     headers: {
                         "Content-Type": "application/json",

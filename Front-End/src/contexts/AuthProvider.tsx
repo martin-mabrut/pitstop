@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
         try {
             const response = await fetch(
-                'http://localhost:3000/User',
+                'http://localhost:8000/api/register',
                 {
                     method: "POST",
                     headers: {
@@ -45,13 +45,8 @@ export const AuthProvider = ({ children }) => {
                 }
             );
             const result = await response.json();
-            if (result) {
-                setUser(result)
-                //rajouer.user
-                localStorage.setItem(USER_KEY, JSON.stringify(result));
-                console.log(user);
-            }
-            throw new Error(result.message);
+            console.log(result);
+
         } catch (error) {
             console.log(error);
         }
