@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useVehicle } from '../contexts/VehicleProvider';
 import { useAuth } from '../contexts/AuthProvider';
 import { useSafety } from '../contexts/SafetyInspectionProvider';
 import { useRepairs } from '../contexts/RepairsProvider';
 import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
+import EditVehicle from '../components/modal/editVehicle';
+import DeleteVehicle from '../components/modal/deleteVehicle';
 
 function formatDate(date?: string) {
     return date ? new Date(date).toLocaleDateString('fr-FR') : '-';
@@ -16,6 +18,8 @@ export default function VehiclePage() {
     const { vehicles, getVehicle } = useVehicle();
     const { getSafetyInspections, safetyList } = useSafety();
     const { getRepairs, repairsList } = useRepairs();
+    const [showEdit, setShowEdit] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
 
     useEffect(() => {
         getVehicle(); getSafetyInspections(); getRepairs();
@@ -30,10 +34,10 @@ export default function VehiclePage() {
         <div className="container">
             <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
                 <h1 className="mb-0">{vehicle.brand} {vehicle.model}</h1>
-                <button type="button" className="btn btn-sm btn-secondary">
+                <button type="button" className="btn btn-sm btn-secondary" onClick={() => setShowEdit(true)}>
                     Modifier
                 </button>
-                <button type="button" className="btn btn-sm btn-danger">
+                <button type="button" className="btn btn-sm btn-danger" onClick={() => setShowDelete(true)}>
                     Supprimer
                 </button>
             </div>
@@ -84,6 +88,14 @@ export default function VehiclePage() {
                     </button>
                 </div>
             </div>
+
+            {showEdit && (
+                <EditVehicle vehicle={vehicle} onClose={() => setShowEdit(false)} />
+            )}
+
+            {showDelete && (
+                <DeleteVehicle vehicle={vehicle} onClose={() => setShowDelete(false)} />
+            )}
         </div>
     );
 }

@@ -38,6 +38,19 @@ body {
   transition: none;
 }
 
+.btn-success {
+  --bs-btn-color: var(--color-white);
+  --bs-btn-bg: var(--color-green);
+  --bs-btn-border-color: var(--color-green);
+  --bs-btn-hover-color: var(--color-white);
+  --bs-btn-hover-bg: var(--color-green);
+  --bs-btn-hover-border-color: var(--color-green);
+  --bs-btn-active-color: var(--color-white);
+  --bs-btn-active-bg: var(--color-green);
+  --bs-btn-active-border-color: var(--color-green);
+  transition: none;
+}
+
 .btn-danger {
   --bs-btn-color: var(--color-white);
   --bs-btn-bg: var(--color-red);
