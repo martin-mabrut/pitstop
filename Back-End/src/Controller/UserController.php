@@ -59,4 +59,16 @@ final class UserController extends AbstractController
         $em->flush();
         return new Response();
     }
+
+    #[Route('/api/user/email', name: 'api_user_email', methods:['PATCH'])]
+    public function update_email(Request $request, EntityManagerInterface $em):Response
+    {
+        $user = $this->security->getUser();
+        $parameters = json_decode($request->getContent(), true);
+        $email = $parameters['email'];
+        $user->setEmail($email);
+        $em->persist($user);
+        $em->flush();
+        return new Response();
+    }
 }
