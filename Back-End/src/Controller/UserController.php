@@ -21,7 +21,6 @@ final class UserController extends AbstractController
     public function __invoke()
     {  
        $user = $this->security->getUser();
-       dd($user);
        return $this->json([
         'username'=>$user->getUsername(),
         'uuid'=>$user->getUuid()
