@@ -12,7 +12,7 @@ export default function Signin() {
         const username = event?.target?.username.value;
         const email = event?.target?.email?.value;
         const password = event?.target?.password?.value;
-        signin({ username, email, password });
+        signin({ username, password, email });
 
         navigate("/login");
     }
