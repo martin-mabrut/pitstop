@@ -1,78 +1,125 @@
 {
-    "$schema": "./node_modules/json-server/schema.json",
-    "User": [
-        {
-            "id": "1",
-            "uid": "1",
-            "username": "philibert",
-            "email": "test@test.com",
-            "password": "secret"
-        },
-        {
-            "id": "2",
-            "uid": "2",
-            "username": "Joseph",
-            "email": "test2@test2.com",
-            "password": "secret2"
-        }
-    ],
-    "vehicle": [
-        {
-            "id": "1209737",
-            "uid": "1209737",
-            "vehicleType": "Voiture",
-            "registrationNumber": "AM264CG",
-            "brand": "Renault",
-            "model": "Twingo",
-            "version": "1997",
-            "firstRegistrationDate": "1997-10-25",
-            "typeOfFuel": "Essence",
-            "typeOfTransmission": "Traction",
-            "mileage": 1000000,
-            "kmPerDay": 20,
-            "userId": 1
-        },
-        {
-            "id": "1509737",
-            "uid": "1509737",
-            "vehicleType": "Voiture",
-            "registrationNumber": "BD564CG",
-            "brand": "Peugeot",
-            "model": "Bingo",
-            "version": "1999",
-            "firstRegistrationDate": "1999-11-25",
-            "typeOfFuel": "Essence",
-            "typeOfTransmission": "Propulsion",
-            "mileage": 999999,
-            "kmPerDay": 32,
-            "userId": 2
-        }
-    ],
-    "repairs": [
-        {
-            "id": "1",
-            "typeOfRepairs": "Freins",
-            "repairDate": "2025-08-25",
-            "description": "Changement des plaquettes",
-            "price": 300.00,
-            "vehicleId": "1509737",
-            "garageId": ""
-        }
-    ],
-    "safetyInspection": [
-        {
-            "id": "1",
-            "dueTime": "2024-09-25",
-            "isDone": "2024-09-22",
-            "type": "follow up",
-            "vehicleId": "1"
-        },
-        {
-            "id": "2",
-            "dueTime": "2025-09-18",
-            "isDone": "2025-09-21",
-            "type": "regular",
-            "vehicleId": "2"
-        }
-    ]
+  "User": [
+    {
+      "id": "1",
+      "uid": "1",
+      "username": "philibert",
+      "email": "test@test.com",
+      "password": "secret"
+    },
+    {
+      "id": "2",
+      "uid": "2",
+      "username": "Joseph",
+      "email": "test2@test2.com",
+      "password": "secret2"
+    },
+    {
+      "username": "Bobby",
+      "email": "test3@test.com",
+      "password": "123456",
+      "id": "KIvezNS70lE"
+    },
+    {
+      "username": "Titeuf",
+      "email": "test4@test.com",
+      "password": "qdfsdf",
+      "id": "Ize-Uq5EsGI"
+    },
+    {
+      "username": "Thierry",
+      "email": "test5@test.com",
+      "password": "qesdfsdf",
+      "id": "vswyj_ZdwO8"
+    },
+    {
+      "username": "tibo",
+      "email": "tibo@test.com",
+      "password": "erfdgfd",
+      "id": "-WxPVlY6URo"
+    },
+    {
+      "username": "lolo",
+      "email": "lolo@test.com",
+      "password": "dfgg",
+      "id": "F7sXPOA1ElA"
+    },
+    {
+      "username": "tof",
+      "email": "tof@test.com",
+      "password": "csdfsd",
+      "id": "pPP0YjSNLAU"
+    },
+    {
+      "username": "qsdq",
+      "email": "qsfdqd@sdfs.com",
+      "password": "qsddsfs",
+      "id": "LOad1pkYjK4"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "1209737",
+      "uid": "1209737",
+      "vehicleType": "Voiture",
+      "registrationNumber": "AM264CG",
+      "brand": "Renault",
+      "model": "Twingo",
+      "version": "1997",
+      "firstRegistrationDate": "1997-10-25",
+      "typeOfFuel": "Essence",
+      "typeOfTransmission": "Traction",
+      "mileage": 1000000,
+      "kmPerDay": 20,
+      "userId": 1
+    },
+    {
+      "id": "1509737",
+      "uid": "1509737",
+      "vehicleType": "Voiture",
+      "registrationNumber": "BD564CG",
+      "brand": "Peugeot",
+      "model": "Bingo",
+      "version": "1999",
+      "firstRegistrationDate": "1999-11-25",
+      "typeOfFuel": "Essence",
+      "typeOfTransmission": "Propulsion",
+      "mileage": 999999,
+      "kmPerDay": 32,
+      "userId": 2
+    },
+    {
+      "brand": "Mercedes",
+      "model": "A200 (modifié) (modifié)",
+      "id": "eijknd4tz50"
+    }
+  ],
+  "repairs": [
+    {
+      "id": "1",
+      "typeOfRepairs": "Freins",
+      "repairDate": "2025-08-25",
+      "description": "Changement des plaquettes",
+      "price": 300,
+      "vehicleId": "1509737",
+      "garageId": ""
+    }
+  ],
+  "safetyInspection": [
+    {
+      "id": "1",
+      "dueTime": "2024-09-25",
+      "isDone": "2024-09-22",
+      "type": "follow up",
+      "vehicleId": "1"
+    },
+    {
+      "id": "2",
+      "dueTime": "2025-09-18",
+      "isDone": "2025-09-21",
+      "type": "regular",
+      "vehicleId": "2"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
