@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
@@ -53,4 +54,39 @@ export default function Dashboard() {
             </ul>
         </div>
     );
+=======
+import { useSafety } from '../contexts/SafetyInspectionProvider';
+import { useState } from 'react';
+import { useEffect } from 'react';
+
+export default function Dashboard() {
+
+    const { safetyInspectionDashboard, safetyList } = useSafety();
+
+    // const list = safetyInspectionDashboard;
+
+    // const [safetyList, setSafetyList] = useState([list]);
+    // console.log(safetyList);
+
+    useEffect(() => {
+        safetyInspectionDashboard()
+    }, []);
+
+    console.log(JSON.stringify(safetyList));
+
+    return (
+        <>
+            <div>
+                <h1>Dashboard</h1>
+            </div>
+
+            <div className="safetyList">
+                <h2>Controles tech</h2>
+                <ul>
+
+                </ul>
+            </div>
+        </>
+    )
+>>>>>>> 2dc488f (Front avant pull back)
 }
