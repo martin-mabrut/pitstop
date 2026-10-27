@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class GarageController extends AbstractController
 {
-    #[Route('/garage', name: 'app_garage')]
+    #[Route('/api/garage', name: 'api_garage')]
     public function index(GarageRepository $garageRepository): Response
     {
         $listGarage = $garageRepository->findAll();
