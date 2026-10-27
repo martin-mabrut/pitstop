@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class SecurityController extends AbstractController
 {
-    #[Route('/api/login', name: 'api_login', methods:['POST'])]
+    #[Route('/api/loginOKSOUR', name: 'api_login', methods:['POST'])]
     public function login()
     {
     }
