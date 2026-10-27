@@ -107,14 +107,6 @@
   ],
   "safetyInspection": [
     {
-      "id": "1",
-      "uid": "1",
-      "dueTime": "2024-09-25",
-      "isDone": "2024-09-22",
-      "type": "follow up",
-      "vehicleId": "1"
-    },
-    {
       "id": "2",
       "uid": "2",
       "dueTime": "2025-09-18",

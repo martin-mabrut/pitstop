@@ -61,7 +61,7 @@ import { useEffect } from 'react';
 
 export default function Dashboard() {
 
-    const { safetyInspectionDashboard, safetyList } = useSafety();
+    const { getSafetyInspections, safetyList } = useSafety();
 
     // const list = safetyInspectionDashboard;
 
@@ -69,10 +69,10 @@ export default function Dashboard() {
     // console.log(safetyList);
 
     useEffect(() => {
-        safetyInspectionDashboard()
+        getSafetyInspections()
     }, []);
 
-    console.log(JSON.stringify(safetyList));
+    const safetys = safetyList;
 
     return (
         <>
@@ -80,10 +80,14 @@ export default function Dashboard() {
                 <h1>Dashboard</h1>
             </div>
 
-            <div className="safetyList">
-                <h2>Controles tech</h2>
+            <div>
+                <h2>Mes échéances</h2>
                 <ul>
-
+                    {safetys.map((ct) => (
+                        <li key={ct.id}>
+                            {ct.dueTime}
+                        </li>
+                    ))}
                 </ul>
             </div>
         </>
