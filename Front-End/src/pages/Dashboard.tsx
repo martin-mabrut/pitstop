@@ -1,35 +1,37 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
+import { useSafety } from '../contexts/SafetyInspectionProvider'
 
 export default function Dashboard() {
     const { vehicles, getVehicle, deleteVehicle, updateVehicle, addVehicle } = useVehicle();
 
+    const { getSafetyInspections, safetyList } = useSafety();
+
     useEffect(() => {
-        getVehicle();
+        getVehicle(); getSafetyInspections();
     }, []);
 
-    const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        const data = new FormData(form);
-        await addVehicle({
-            brand: data.get('brand') as string,
-            model: data.get('model') as string,
-        });
-        form.reset();
-    };
+    // const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+    //     const form = event.currentTarget;
+    //     const data = new FormData(form);
+    //     await addVehicle({
+    //         brand: data.get('brand') as string,
+    //         model: data.get('model') as string,
+    //     });
+    //     form.reset();
+    // };
 
 
-    const handleUpdate = async (vehicle: Vehicle) => {
-        await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
-    };
+    // const handleUpdate = async (vehicle: Vehicle) => {
+    //     await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
+    // };
 
     // SUPPRIMER
-    const handleDelete = async (id: Vehicle['id']) => {
-        await deleteVehicle(id);
-    };
-
+    // const handleDelete = async (id: Vehicle['id']) => {
+    //     await deleteVehicle(id);
+    // };
 
     return (
         <div>
@@ -55,11 +57,7 @@ export default function Dashboard() {
             <div>
                 <h2>Mes échéances</h2>
                 <ul>
-                    {safetys.map((ct) => (
-                        <li key={ct.id}>
-                            {ct.dueTime}
-                        </li>
-                    ))}
+                    {safetyList[0].dueTime}
                 </ul>
             </div>
         </div>
