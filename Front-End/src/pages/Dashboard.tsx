@@ -12,26 +12,27 @@ export default function Dashboard() {
         getVehicle(); getSafetyInspections();
     }, []);
 
-    // const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-    //     const form = event.currentTarget;
-    //     const data = new FormData(form);
-    //     await addVehicle({
-    //         brand: data.get('brand') as string,
-    //         model: data.get('model') as string,
-    //     });
-    //     form.reset();
-    // };
+    const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const data = new FormData(form);
+        await addVehicle({
+            brand: data.get('brand') as string,
+            model: data.get('model') as string,
+        });
+        form.reset();
+    };
 
 
-    // const handleUpdate = async (vehicle: Vehicle) => {
-    //     await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
-    // };
+    const handleUpdate = async (vehicle: Vehicle) => {
+        await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
+    };
 
     // SUPPRIMER
-    // const handleDelete = async (id: Vehicle['id']) => {
-    //     await deleteVehicle(id);
-    // };
+    const handleDelete = async (id: Vehicle['id']) => {
+        await deleteVehicle(id);
+    };
+
 
     return (
         <div>
@@ -57,7 +58,11 @@ export default function Dashboard() {
             <div>
                 <h2>Mes échéances</h2>
                 <ul>
-                    {safetyList[0].dueTime}
+                    {safetyList.map((ct) => (
+                        <li key={ct.id}>
+                            {ct.dueTime}
+                        </li>
+                    ))}
                 </ul>
             </div>
         </div>

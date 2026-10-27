@@ -20,6 +20,7 @@ export const SafetyInspectionProvider = ({ children }) => {
                 }
             );
             const safetyInspectionList = await response.json();
+            console.log(safetyInspectionList);
             if (safetyInspectionList) {
 
                 // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
