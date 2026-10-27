@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useVehicle } from '../contexts/VehicleProvider';
 import { useSafety } from '../contexts/SafetyInspectionProvider'
 import { useUser } from '../contexts/UserProvider'
 import CardVehicule from '../components/CardVehicule/CardVehicule';
+import AddVehicle from '../components/modal/addVehicle';
 import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
 import './Dashboard.css';
 
@@ -13,6 +14,8 @@ export default function Dashboard() {
     const { getSafetyInspections, safetyList } = useSafety();
 
     const { getUser, user } = useUser();
+
+    const [showAdd, setShowAdd] = useState(false);
 
     useEffect(() => {
         getVehicle(); getSafetyInspections(); getUser();
@@ -32,7 +35,7 @@ export default function Dashboard() {
                     </button>
                 </div>
                 <div className="col-12 col-lg-6">
-                    <button type="button" className="dashboard-action">
+                    <button type="button" className="dashboard-action" onClick={() => setShowAdd(true)}>
                         <span className="dashboard-action__plus">+</span>
                         Ajouter un véhicule
                     </button>
@@ -69,6 +72,10 @@ export default function Dashboard() {
                     })}
                 </div>
             </div>
+
+            {showAdd && (
+                <AddVehicle onClose={() => setShowAdd(false)} />
+            )}
         </div>
     );
 }

@@ -20,8 +20,10 @@ export default function DeleteVehicle({ vehicle, onClose }: DeleteVehicleProps) 
             <p>
                 Supprimer {vehicle.brand} {vehicle.model} ?
             </p>
-            <button onClick={handleDelete}>Oui, supprimer</button>
-            <button onClick={onClose}>Annuler</button>
+            <div className="modal-pitstop__actions">
+                <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>Oui, supprimer</button>
+            </div>
         </Modal>
     );
 }

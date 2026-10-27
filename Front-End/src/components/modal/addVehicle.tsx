@@ -21,17 +21,18 @@ export default function AddVehicle({ onClose }: AddVehicleProps) {
     return (
         <Modal title="Ajouter un véhicule" onClose={onClose}>
             <form onSubmit={handleSubmit}>
-                <label>
-                    <p>Marque</p>
-                    <input name="brand" required />
+                <label className="form-label w-100 mb-3">
+                    Marque
+                    <input name="brand" className="form-control mt-1" required />
                 </label>
-                <label>
-                    <p>Modèle</p>
-                    <input name="model" required />
+                <label className="form-label w-100">
+                    Modèle
+                    <input name="model" className="form-control mt-1" required />
                 </label>
-                <br />
-                <button type="submit">Ajouter</button>
-                <button type="button" onClick={onClose}>Annuler</button>
+                <div className="modal-pitstop__actions">
+                    <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>
+                    <button type="submit" className="btn btn-success">Ajouter</button>
+                </div>
             </form>
         </Modal>
     );
