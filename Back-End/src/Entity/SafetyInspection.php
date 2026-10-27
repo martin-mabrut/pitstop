@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\SafetyInspectionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+
 
 #[ORM\Entity(repositoryClass: SafetyInspectionRepository::class)]
 class SafetyInspection
@@ -14,12 +16,15 @@ class SafetyInspection
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['safety:read'])]
     private ?\DateTime $dueTimeAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['safety:read'])]
     private ?\DateTime $doneAt = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['safety:read'])]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'safetyInspections')]
