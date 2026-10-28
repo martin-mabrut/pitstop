@@ -54,7 +54,9 @@ function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
             <p className="fw-bold">{inspection.vehicle.model}</p>
           )}
           <p>Type : {inspection.type}</p>
-          <p>Échéance : {formatDate(inspection.dueTimeAt)}</p>
+          {!inspection.doneAt && (
+            <p>Échéance : {formatDate(inspection.dueTimeAt)}</p>
+          )}
           <p>Réalisé le : {formatDate(inspection.doneAt)}</p>
         </div>
       </div>
