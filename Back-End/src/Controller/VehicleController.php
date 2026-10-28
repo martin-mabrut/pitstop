@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class VehicleController extends AbstractController
 {

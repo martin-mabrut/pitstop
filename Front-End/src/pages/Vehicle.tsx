@@ -26,6 +26,7 @@ export default function VehiclePage() {
     const [showHistory, setShowHistory] = useState(false);
     const [showAddRepair, setShowAddRepair] = useState(false);
 
+
     useEffect(function () {
         getVehicle();
         getUser();
@@ -38,6 +39,8 @@ export default function VehiclePage() {
     const vehicle = vehicles.find(function (v) {
         return String(v.id) === uuid;
     });
+
+    console.log(safetyList);
 
     if (!vehicle) return <p>Véhicule introuvable</p>;
 
@@ -107,11 +110,14 @@ export default function VehiclePage() {
                 <div className="col-12 col-lg-6">
                     <h2>Historique des contrôles techniques</h2>
                     <ul>
-                        {safetyList.slice(0, 3).map((ct) => (
-                            <li key={ct.id}>
-                                {formatDate(ct.dueTime)} - {ct.type} : réalisé le {formatDate(ct.isDone)}
-                            </li>
-                        ))}
+                        {safetyList.slice(0, 3).map(function (ct) {
+                            return (
+                                <li key={ct.id}>
+                                    {formatDate(ct.dueTimeAt)} - {ct.type} : réalisé le {formatDate(ct.doneAt)}
+                                </li>
+                            );
+                        }
+                        )}
                     </ul>
                     <button type="button" className="btn btn-sm btn-secondary">
                         Voir tout

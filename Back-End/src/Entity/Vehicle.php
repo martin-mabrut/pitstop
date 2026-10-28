@@ -19,6 +19,7 @@ class Vehicle
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['vehicle:read', 'safety:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
@@ -28,6 +29,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
+    #[Groups(['vehicle:read'])]
     private ?string $vehicleType = null;
 
     #[ORM\Column(length: 20)]
@@ -36,7 +38,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['safety:read'])]
+    #[Groups(['safety:read,vehicle:read'])]
     private ?string $registrationNumber = null;
 
     #[ORM\Column(length: 50)]
@@ -44,8 +46,8 @@ class Vehicle
     #[Assert\Type(
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
-    )] 
-    #[Groups(['safety:read'])]
+    )]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
@@ -54,7 +56,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['safety:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $model = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -62,7 +64,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['safety:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $version = null;
 
     #[ORM\Column]
@@ -76,6 +78,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
+    #[Groups(['vehicle:read'])]
     private ?string $typeOfFuel = null;
 
     #[ORM\Column(length: 30)]
@@ -85,6 +88,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
+    #[Groups(['vehicle:read'])]
     private ?string $typeOfTransmission = null;
 
     #[ORM\Column(nullable: true)]
@@ -92,6 +96,7 @@ class Vehicle
         type: 'int',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
+    #[Groups(['vehicle:read'])]
     private ?int $mileage = null;
 
     #[ORM\Column(nullable: true)]
@@ -99,6 +104,7 @@ class Vehicle
         type: 'int',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
+    #[Groups(['vehicle:read'])]
     private ?int $kmPerDay = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
