@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, Link } from 'react-router';
 import { useVehicle } from '../contexts/VehicleProvider';
-import { useAuth } from '../contexts/AuthProvider';
+import { useUser } from '../contexts/UserProvider';
 import { useSafety } from '../contexts/SafetyInspectionProvider';
-import { useRepairs, type Repair } from '../contexts/RepairsProvider';
+import { useRepairs } from '../contexts/RepairsProvider';
 import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
 import EditVehicle from '../components/modal/editVehicle';
 import DeleteVehicle from '../components/modal/deleteVehicle';
 import AddRepair from '../components/modal/addRepairs';
-import EditRepair from '../components/modal/editRepair';
-import DeleteRepair from '../components/modal/deleteRepair';
 import RepairHistory from '../components/modal/repairHistory';
 
 function formatDate(date?: string) {
@@ -18,39 +16,43 @@ function formatDate(date?: string) {
 
 export default function VehiclePage() {
     const { uuid } = useParams();
-    const { user } = useAuth();
+    const { user, getUser } = useUser();
     const { vehicles, getVehicle } = useVehicle();
     const { getSafetyInspections, safetyList } = useSafety();
     const { getRepairs, repairsList } = useRepairs();
+
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
-
-    // modals des réparations
     const [showAddRepair, setShowAddRepair] = useState(false);
-    const [editingRepair, setEditingRepair] = useState<Repair | null>(null);
-    const [deletingRepair, setDeletingRepair] = useState<Repair | null>(null);
 
     useEffect(function () {
         getVehicle();
+        getUser();
         if (uuid) {
             getSafetyInspections(uuid);
             getRepairs(uuid);
         }
     }, [uuid]);
 
-    const vehicle = vehicles.find((v) => String(v.id) === uuid);
+    const vehicle = vehicles.find(function (v) {
+        return String(v.id) === uuid;
+    });
 
     if (!vehicle) return <p>Véhicule introuvable</p>;
 
     return (
         <div className="container">
+            <Link to="/dashboard" className="btn btn-sm btn-secondary mb-3">
+                ← Retour
+            </Link>
+
             <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
                 <h1 className="mb-0">{vehicle.brand} {vehicle.model}</h1>
-                <button type="button" className="btn btn-sm btn-secondary" onClick={() => setShowEdit(true)}>
+                <button type="button" className="btn btn-sm btn-secondary" onClick={function () { setShowEdit(true); }}>
                     Modifier
                 </button>
-                <button type="button" className="btn btn-sm btn-danger" onClick={() => setShowDelete(true)}>
+                <button type="button" className="btn btn-sm btn-danger" onClick={function () { setShowDelete(true); }}>
                     Supprimer
                 </button>
             </div>
@@ -118,11 +120,11 @@ export default function VehiclePage() {
             </div>
 
             {showEdit && (
-                <EditVehicle vehicle={vehicle} onClose={() => setShowEdit(false)} />
+                <EditVehicle vehicle={vehicle} onClose={function () { setShowEdit(false); }} />
             )}
 
             {showDelete && (
-                <DeleteVehicle vehicle={vehicle} onClose={() => setShowDelete(false)} />
+                <DeleteVehicle vehicle={vehicle} onClose={function () { setShowDelete(false); }} />
             )}
 
             {showAddRepair && uuid && (
@@ -132,24 +134,9 @@ export default function VehiclePage() {
                 />
             )}
 
-            {editingRepair && uuid && (
-                <EditRepair
-                    vehicleId={uuid}
-                    repair={editingRepair}
-                    onClose={function () { setEditingRepair(null); }}
-                />
-            )}
-
-            {deletingRepair && uuid && (
-                <DeleteRepair
-                    vehicleId={uuid}
-                    repair={deletingRepair}
-                    onClose={function () { setDeletingRepair(null); }}
-                />
-            )}
-
-            {showHistory && (
+            {showHistory && uuid && (
                 <RepairHistory
+                    vehicleId={uuid}
                     repairs={repairsList}
                     onClose={function () { setShowHistory(false); }}
                 />
