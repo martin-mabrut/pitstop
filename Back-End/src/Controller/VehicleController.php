@@ -16,135 +16,241 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class VehicleController extends AbstractController
 {
-    public function __construct(private Security $security) {}
+    private const GROUPS = ['safety:read', 'vehicle:read'];
+
+    public function __construct(
+        private Security $security
+    ) {}
+
     #[Route('/api/vehicle/all', name: 'api_vehicle_all', methods: ['GET'])]
-    public function findAll(VehicleRepository $vehicleRepository): Response
-    {
+    public function findAll(
+        VehicleRepository $vehicleRepository
+    ): Response {
         $user = $this->security->getUser();
-        $vehicleList = $vehicleRepository->findBy(["user" => $user]);
-        return $this->json(['vehicles' => $vehicleList], 200, [], ['groups' => ['safety:read']]);
+
+        if (!$user) {
+            return $this->json(['message' => 'Non authentifié'], 401);
+        }
+
+        $vehicleList = $vehicleRepository->findBy(['user' => $user]);
+
+        return $this->json(
+            ['vehicles' => $vehicleList],
+            200,
+            [],
+            ['groups' => self::GROUPS]
+        );
     }
 
-    #[Route('/api/vehicle/one/{id}', name: 'api_vehicle_one', methods: ['GET'])]
-    public function index(int $id, VehicleRepository $vehicleRepository): Response
-    {
+    #[Route('/api/vehicle/one/{id}', name: 'api_vehicle_one', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function index(
+        int $id,
+        VehicleRepository $vehicleRepository
+    ): Response {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
-        if ($vehicle === null) {
-            return new Response("Vehicle not found", 404);
+
+        if (!$vehicle) {
+            return $this->json(['message' => 'Véhicule introuvable'], 404);
         }
-        if ($vehicle->getUser() != $user) {
-            return new Response("Invalid credentials", 403);
+
+        if (!$user || $vehicle->getUser() !== $user) {
+            return $this->json(['message' => 'Accès refusé'], 403);
         }
-        return $this->json(['vehicle' => $vehicle], 200, [], ['groups' => ['safety:read']]);
+
+        return $this->json(
+            ['vehicle' => $vehicle],
+            200,
+            [],
+            ['groups' => self::GROUPS]
+        );
     }
 
     #[Route('/api/vehicle/add/', name: 'api_vehicle_add', methods: ['POST'])]
-    public function addDone(Request $request, EntityManagerInterface $em): Response
-    {
+    public function addDone(
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
         $user = $this->security->getUser();
+
+        if (!$user) {
+            return $this->json(['message' => 'Non authentifié'], 401);
+        }
+
         $parameters = json_decode($request->getContent(), true);
 
         if (!is_array($parameters)) {
-            return new Response('Invalid JSON', 400);
+            return $this->json(['message' => 'JSON invalide'], 400);
         }
 
-        $vehicle = new Vehicle();
-        $vehicle->setUser($user);
-        $vehicle->setVehicleType($parameters['vehicleType']);
-        $vehicle->setRegistrationNumber($parameters['registrationNumber']);
-        $vehicle->setBrand($parameters['brand']);
-        $vehicle->setModel($parameters['model']);
-        if ($parameters['version'] !== "") {
-            $vehicle->setVersion($parameters['version']);
-        }
-        $vehicle->setFirstRegistrationDateAt(new DateTimeImmutable($parameters['firstRegistrationDateAt']));
-        $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
-        $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
-        if ($parameters['mileage'] !== "") {
-            $vehicle->setMileage($parameters['mileage']);
+        foreach ([
+            'vehicleType',
+            'registrationNumber',
+            'brand',
+            'model',
+            'firstRegistrationDateAt',
+            'typeOfFuel',
+            'typeOfTransmission',
+        ] as $field) {
+            if (!isset($parameters[$field]) || $parameters[$field] === '') {
+                return $this->json(
+                    ['message' => "Le champ $field est obligatoire"],
+                    400
+                );
+            }
         }
 
-        if ($parameters['kmPerDay'] !== "") {
-            $vehicle->setKmPerDay($parameters['kmPerDay']);
-        }
-        $uuid = Uuid::v7();
-        $vehicle->setUuid($uuid);
-        $em->persist($vehicle);
-        $em->flush();
+        try {
+            $vehicle = new Vehicle();
+            $vehicle->setUser($user);
+            $vehicle->setVehicleType($parameters['vehicleType']);
+            $vehicle->setRegistrationNumber($parameters['registrationNumber']);
+            $vehicle->setBrand($parameters['brand']);
+            $vehicle->setModel($parameters['model']);
+            $vehicle->setVersion($parameters['version'] ?? null);
+            $vehicle->setFirstRegistrationDateAt(
+                new DateTimeImmutable($parameters['firstRegistrationDateAt'])
+            );
+            $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
+            $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
 
-        return $this->json(['vehicle' => $vehicle], 201, [], ['groups' => ['vehicle:read']]);
+            $vehicle->setMileage(
+                isset($parameters['mileage']) && $parameters['mileage'] !== ''
+                    ? (int) $parameters['mileage']
+                    : null
+            );
+
+            $vehicle->setKmPerDay(
+                isset($parameters['kmPerDay']) && $parameters['kmPerDay'] !== ''
+                    ? (int) $parameters['kmPerDay']
+                    : null
+            );
+
+            $vehicle->setUuid((string) Uuid::v7());
+
+            $em->persist($vehicle);
+            $em->flush();
+
+            return $this->json(
+                ['vehicle' => $vehicle],
+                201,
+                [],
+                ['groups' => self::GROUPS]
+            );
+        } catch (\Throwable $error) {
+            return $this->json(
+                ['message' => 'Impossible de créer le véhicule'],
+                400
+            );
+        }
     }
 
     #[Route('/api/vehicle/update/{id}', name: 'api_vehicle_update', methods: ['PATCH'], requirements: ['id' => '\d+'])]
-    public function update(int $id, Request $request, VehicleRepository $vehicleRepository, EntityManagerInterface $em): Response
-    {
+    public function update(
+        int $id,
+        Request $request,
+        VehicleRepository $vehicleRepository,
+        EntityManagerInterface $em
+    ): Response {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
 
-        if ($vehicle === null) {
-            return new Response('Vehicle not found', 404);
+        if (!$vehicle) {
+            return $this->json(['message' => 'Véhicule introuvable'], 404);
         }
-        if ($vehicle->getUser() !== $user) {
-            return new Response('Invalid credentials', 403);
+
+        if (!$user || $vehicle->getUser() !== $user) {
+            return $this->json(['message' => 'Accès refusé'], 403);
         }
 
         $parameters = json_decode($request->getContent(), true);
+
         if (!is_array($parameters)) {
-            return new Response('Invalid JSON', 400);
+            return $this->json(['message' => 'JSON invalide'], 400);
         }
 
-        if ($parameters['vehicleType'] !== "") {
-            $vehicle->setVehicleType($parameters['vehicleType']);
-        }
-        if ($parameters['registrationNumber'] !== "") {
-            $vehicle->setRegistrationNumber($parameters['registrationNumber']);
-        }
-        if ($parameters['brand'] !== "") {
-            $vehicle->setBrand($parameters['brand']);
-        }
-        if ($parameters['model'] !== "") {
-            $vehicle->setModel($parameters['model']);
-        }
-        if ($parameters['version'] !== "") {
-            $vehicle->setVersion($parameters['version']);
-        }
-        if ($parameters['firstRegistrationDateAt'] !== "") {
-            try {
-                $vehicle->setFirstRegistrationDateAt(new DateTimeImmutable($parameters['firstRegistrationDateAt']));
-            } catch (\Exception) {
-                return new Response('Invalid firstRegistrationDateAt', 400);
+        try {
+            if (isset($parameters['vehicleType']) && $parameters['vehicleType'] !== '') {
+                $vehicle->setVehicleType($parameters['vehicleType']);
             }
-        }
-        if ($parameters['typeOfFuel'] !== "") {
-            $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
-        }
-        if ($parameters['typeOfTransmission'] !== "") {
-            $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
-        }
-        if ($parameters['mileage'] !== 0) {
-            $vehicle->setMileage($parameters['mileage']);
-        }
-        if ($parameters['kmPerDay'] !== 0) {
-            $vehicle->setKmPerDay($parameters['kmPerDay']);
-        }
-        $em->persist($vehicle);
-        $em->flush();
 
-        return $this->json(['vehicle' => $vehicle], 200, [], ['groups' => ['vehicle:read']]);
+            if (isset($parameters['registrationNumber']) && $parameters['registrationNumber'] !== '') {
+                $vehicle->setRegistrationNumber($parameters['registrationNumber']);
+            }
+
+            if (isset($parameters['brand']) && $parameters['brand'] !== '') {
+                $vehicle->setBrand($parameters['brand']);
+            }
+
+            if (isset($parameters['model']) && $parameters['model'] !== '') {
+                $vehicle->setModel($parameters['model']);
+            }
+
+            if (array_key_exists('version', $parameters)) {
+                $vehicle->setVersion($parameters['version'] ?: null);
+            }
+
+            if (!empty($parameters['firstRegistrationDateAt'])) {
+                $vehicle->setFirstRegistrationDateAt(
+                    new DateTimeImmutable($parameters['firstRegistrationDateAt'])
+                );
+            }
+
+            if (isset($parameters['typeOfFuel']) && $parameters['typeOfFuel'] !== '') {
+                $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
+            }
+
+            if (isset($parameters['typeOfTransmission']) && $parameters['typeOfTransmission'] !== '') {
+                $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
+            }
+
+            if (array_key_exists('mileage', $parameters)) {
+                $vehicle->setMileage(
+                    $parameters['mileage'] === '' || $parameters['mileage'] === null
+                        ? null
+                        : (int) $parameters['mileage']
+                );
+            }
+
+            if (array_key_exists('kmPerDay', $parameters)) {
+                $vehicle->setKmPerDay(
+                    $parameters['kmPerDay'] === '' || $parameters['kmPerDay'] === null
+                        ? null
+                        : (int) $parameters['kmPerDay']
+                );
+            }
+
+            $em->flush();
+
+            return $this->json(
+                ['vehicle' => $vehicle],
+                200,
+                [],
+                ['groups' => self::GROUPS]
+            );
+        } catch (\Throwable $error) {
+            return $this->json(
+                ['message' => 'Impossible de modifier le véhicule'],
+                400
+            );
+        }
     }
 
     #[Route('/api/vehicle/delete/{id}', name: 'api_vehicle_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    public function delete(int $id, VehicleRepository $vehicleRepository, EntityManagerInterface $em): Response
-    {
+    public function delete(
+        int $id,
+        VehicleRepository $vehicleRepository,
+        EntityManagerInterface $em
+    ): Response {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
 
-        if ($vehicle === null) {
-            return new Response('Vehicle not found', 404);
+        if (!$vehicle) {
+            return $this->json(['message' => 'Véhicule introuvable'], 404);
         }
-        if ($vehicle->getUser() !== $user) {
-            return new Response('Invalid credentials', 403);
+
+        if (!$user || $vehicle->getUser() !== $user) {
+            return $this->json(['message' => 'Accès refusé'], 403);
         }
 
         $em->remove($vehicle);
