@@ -7,10 +7,12 @@ export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
 
+    const API_URL = 'http://localhost:3000/User';
+
     const getUser = async () => {
         try {
             const response = await fetch(
-                'http://localhost:3000/User/1',
+                `${API_URL}/1`,
                 {
                     // credentials: 'include',
                     method: "GET",
