@@ -1,75 +1,79 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
+import { useVehicle } from '../contexts/VehicleProvider';
 import { useSafety } from '../contexts/SafetyInspectionProvider'
+import { useUser } from '../contexts/UserProvider'
+import CardVehicule from '../components/CardVehicule/CardVehicule';
 import AddVehicle from '../components/modal/addVehicle';
-import EditVehicle from '../components/modal/editVehicle';
-import DeleteVehicle from '../components/modal/deleteVehicle';
+import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
+import './Dashboard.css';
 
 export default function Dashboard() {
-    const { vehicles, getVehicle, updateVehicle, deleteVehicle } = useVehicle();
-    const [showAdd, setShowAdd] = useState(false);
-    const [editing, setEditing] = useState<Vehicle | null>(null);
-    const [deleting, setDeleting] = useState<Vehicle | null>(null);
+    const { vehicles, getVehicle } = useVehicle();
 
     const { getSafetyInspections, safetyList } = useSafety();
 
+    const { getUser, user } = useUser();
+
+    const [showAdd, setShowAdd] = useState(false);
+
     useEffect(() => {
-        getVehicle(); getSafetyInspections();
+        getVehicle(); getSafetyInspections(); getUser();
     }, []);
 
     return (
-        <div>
-            <h1>Mes véhicules</h1>
+        <div className="container">
+            <h1>Dashboard</h1>
+            <p>{user?.username}</p>
 
-            <button onClick={function () { setShowAdd(true); }}>
-                Ajouter un véhicule
-            </button>
-
-            <ul>
-                {vehicles.map(function (v) {
-                    return (
-                        <li key={v.id}>
-                            <Link to={`/vehicle/${v.id}`}>
-                                {v.brand} {v.model}
-                            </Link>
-                            <button onClick={function () { setEditing(v); }}>
-                                Modifier
-                            </button>
-                            <button onClick={function () { setDeleting(v); }}>
-                                Supprimer
-                            </button>
-                        </li>
-                    );
-                })}
-            </ul>
+            <div className="row g-3 mb-4">
+                <div className="col-12 col-lg-6">
+                    <button type="button" className="dashboard-action" onClick={() => setShowAdd(true)}>
+                        <span className="dashboard-action__plus">+</span>
+                        Ajouter une réparation
+                    </button>
+                </div>
+                <div className="col-12 col-lg-6">
+                    <button type="button" className="dashboard-action" onClick={() => setShowAdd(true)}>
+                        <span className="dashboard-action__plus">+</span>
+                        Ajouter un véhicule
+                    </button>
+                </div>
+            </div>
 
             <div>
                 <h2>Mes échéances</h2>
-                <ul>
-                    {safetyList.map((ct) => (
-                        <li key={ct.id}>
-                            {ct.dueTime}
-                        </li>
-                    ))}
-                </ul>
+                <div className="row g-3">
+                    {safetyList[0] && (
+                        <div className="col-12 col-lg-6">
+                            <CardSafetyInspection inspection={safetyList[0]} />
+                        </div>
+                    )}
+                    {safetyList[1] && (
+                        <div className="col-12 col-lg-6">
+                            <CardSafetyInspection inspection={safetyList[1]} />
+                        </div>
+                    )}
+                </div>
             </div>
+
+            <div>
+                <h2>Mes véhicules</h2>
+                <div className="row g-3">
+                    {vehicles.map(function (v) {
+                        return (
+                            <div key={v.id} className="col-12 col-lg-6">
+                                <Link to={`/vehicle/${v.id}`} className="dashboard-vehicles__link">
+                                    <CardVehicule vehicle={v} />
+                                </Link>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
             {showAdd && (
-                <AddVehicle onClose={function () { setShowAdd(false); }} />
-            )}
-
-            {editing && (
-                <EditVehicle
-                    vehicle={editing}
-                    onClose={function () { setEditing(null); }}
-                />
-            )}
-
-            {deleting && (
-                <DeleteVehicle
-                    vehicle={deleting}
-                    onClose={function () { setDeleting(null); }}
-                />
+                <AddVehicle onClose={() => setShowAdd(false)} />
             )}
         </div>
     );

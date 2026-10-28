@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
+import "./Auth.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -11,19 +13,24 @@ export default function Login() {
         login({ username, password });
     }
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <p>username</p>
-                    <input name='username' required />
-                </label>
-                <label>
-                    <p>Password</p>
-                    <input type='password' name='password' required />
-                </label>
-                <br />
-                <button type="submit">Login</button>
-            </form>
+        <div className="container auth-page">
+            <div className="auth-card">
+                <h1 className="auth-card__title">Connexion</h1>
+                <form onSubmit={handleSubmit}>
+                    <label className="form-label w-100 mb-3">
+                        Nom d'utilisateur
+                        <input name='username' className="form-control mt-1" required />
+                    </label>
+                    <label className="form-label w-100 mb-4">
+                        Mot de passe
+                        <input type='password' name='password' className="form-control mt-1" required />
+                    </label>
+                    <button type="submit" className="btn btn-success w-100">Se connecter</button>
+                </form>
+                <p className="auth-card__switch">
+                    Pas encore de compte ? <Link to="/signin">S'inscrire</Link>
+                </p>
+            </div>
         </div>
     )
 }
