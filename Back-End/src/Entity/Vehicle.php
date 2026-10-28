@@ -29,7 +29,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $vehicleType = null;
 
     #[ORM\Column(length: 20)]
@@ -38,7 +38,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['safety:read,vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $registrationNumber = null;
 
     #[ORM\Column(length: 50)]
@@ -69,6 +69,7 @@ class Vehicle
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'firstRegistrationDateAt must not be null')]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?\DateTimeImmutable $firstRegistrationDateAt = null;
 
     #[ORM\Column(length: 30)]
@@ -78,7 +79,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $typeOfFuel = null;
 
     #[ORM\Column(length: 30)]
@@ -88,7 +89,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?string $typeOfTransmission = null;
 
     #[ORM\Column(nullable: true)]
@@ -96,7 +97,7 @@ class Vehicle
         type: 'int',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?int $mileage = null;
 
     #[ORM\Column(nullable: true)]
@@ -104,7 +105,7 @@ class Vehicle
         type: 'int',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['vehicle:read'])]
+    #[Groups(['safety:read', 'vehicle:read'])]
     private ?int $kmPerDay = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
