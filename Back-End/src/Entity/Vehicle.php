@@ -7,47 +7,98 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: VehicleRepository::class)]
 class Vehicle
 {
+    public const TYPE_VEHICLE = ['Voiture', 'VUL', 'Deux-roues'];
+    public const TYPE_FUEL = ['Essence', 'Diesel', 'Electrique'];
+    public const TYPE_TRANSMISSION = ['Manuelle', 'Automatique'];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'vehicleType must not be null')]
+    #[Assert\Choice(choices: Vehicle::TYPE_VEHICLE, message: 'Choose a valid type.')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?string $vehicleType = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: 'registrationNumber must not be null')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['safety:read'])]
     private ?string $registrationNumber = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'brand must not be null')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )] 
     #[Groups(['safety:read'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'model must not be null')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['safety:read'])]
     private ?string $model = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['safety:read'])]
     private ?string $version = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'firstRegistrationDateAt must not be null')]
     private ?\DateTimeImmutable $firstRegistrationDateAt = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message: 'typeOfFuel must not be null')]
+    #[Assert\Choice(choices: Vehicle::TYPE_FUEL, message: 'Choose a valid type.')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?string $typeOfFuel = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message: 'typeOfTransmission must not be null')]
+    #[Assert\Choice(choices: Vehicle::TYPE_TRANSMISSION, message: 'Choose a valid type.')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?string $typeOfTransmission = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'int',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?int $mileage = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'int',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?int $kmPerDay = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]

@@ -19,13 +19,11 @@ class SafetyInspection
     private ?int $id = null;
 
     #[ORM\Column]
-    // #[Assert\DateTime]
     #[Assert\NotBlank(message: 'dueTimeAt must not be null')]
     #[Groups(['safety:read'])]
     private ?\DateTime $dueTimeAt = null;
 
     #[ORM\Column(nullable: true)]
-    // #[Assert\DateTime]
     #[Groups(['safety:read'])]
     private ?\DateTime $doneAt = null;
 

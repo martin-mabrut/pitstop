@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RepairsRepository::class)]
 class Repairs
 {
-    public const TYPE_REPAIRS = ['Carrosserie', 'Vitre', 'Autre'];
+    public const TYPE_REPAIRS = ['Carrosserie', 'Mécaniques', 'Electriques', 'Peinture', 'Autre'];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

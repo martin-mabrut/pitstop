@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\SecurityBundle\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTimeImmutable;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VehicleController extends AbstractController
@@ -66,7 +67,8 @@ final class VehicleController extends AbstractController
         if ($parameters['kmPerDay'] !== "") {
             $vehicle->setKmPerDay($parameters['kmPerDay']);
         }
-
+        $uuid = Uuid::v7();
+        $vehicle->setUuid($uuid);
         $em->persist($vehicle);
         $em->flush();
 
