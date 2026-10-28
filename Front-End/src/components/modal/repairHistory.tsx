@@ -19,7 +19,7 @@ export default function RepairHistory({ vehicleId, repairs, onClose }: RepairHis
     const [deleting, setDeleting] = useState<Repair | null>(null);
 
     const sorted = repairs.slice().sort(function (a, b) {
-        return new Date(b.repairDate).getTime() - new Date(a.repairDate).getTime();
+        return new Date(b.repairedAt).getTime() - new Date(a.repairedAt).getTime();
     });
 
     return (
@@ -33,7 +33,7 @@ export default function RepairHistory({ vehicleId, repairs, onClose }: RepairHis
                             {sorted.map(function (repair) {
                                 return (
                                     <li key={repair.id} className="list-group-item">
-                                        <strong>{formatDate(repair.repairDate)}</strong> - {repair.typeOfRepairs}
+                                        <strong>{formatDate(repair.repairedAt)}</strong> - {repair.typeOfRepairs}
                                         <br />
                                         {repair.description} ({repair.price} €)
                                         <div className="mt-2">

@@ -130,7 +130,7 @@ export const SafetyInspectionProvider = ({ children }) => {
 
         try {
             const response = await fetch(
-                `${API_URL}/addDone/${vehicleId}/`,
+                `${API_URL}/addDone/${vehicleId}`,
                 {
                     credentials: 'include',
                     method: "POST",
@@ -140,10 +140,9 @@ export const SafetyInspectionProvider = ({ children }) => {
                     body: JSON.stringify({ doneAt })
                 }
             );
-            const res = await response.json();
-            console.log(res);
-
-            getSafetyInspections(vehicleId);
+            if (response.ok) {
+                getSafetyInspectionsNotDone();
+            }
 
         } catch (error) {
             console.log(error);
@@ -153,7 +152,7 @@ export const SafetyInspectionProvider = ({ children }) => {
     const safetyInspectionNo = async (vehicleId) => {
         try {
             const response = await fetch(
-                `${API_URL}/addFirst/${vehicleId}/`,
+                `${API_URL}/addFirst/${vehicleId}`,
                 {
                     credentials: 'include',
                     method: "POST",
@@ -162,11 +161,9 @@ export const SafetyInspectionProvider = ({ children }) => {
                     },
                 }
             );
-            const res = await response.json();
-            console.log(res);
-
-            getSafetyInspections(vehicleId);
-
+            if (response.ok) {
+                getSafetyInspectionsNotDone();
+            }
         } catch (error) {
             console.log(error);
         }

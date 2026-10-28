@@ -9,11 +9,8 @@ function CardVehicule({ vehicle }: CardVehiculeProps) {
   return (
     <div className="card-vehicule">
       <div className="card-vehicule__infos">
-        <h3>{vehicle.brand} {vehicle.model}</h3>
-        <p>Immatriculation : {vehicle.registrationNumber}</p>
-        <p>Année : {vehicle.version}</p>
-        <p>Carburant : {vehicle.typeOfFuel}</p>
-        <p>Kilométrage : {vehicle.mileage?.toLocaleString('fr-FR')} km</p>
+        <h3>{vehicle.brand}</h3>
+        <p className="h3">{vehicle.model}</p>
       </div>
     </div>
   )

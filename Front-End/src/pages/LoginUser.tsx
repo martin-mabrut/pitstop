@@ -1,16 +1,20 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import "./Auth.css";
 
 export default function Login() {
-  const { login } = useAuth();
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event?.preventDefault();
         const username = event?.target?.username?.value;
         const password = event?.target?.password?.value;
-        login({ username, password });
+        const success = await login({ username, password });
+        if (success) {
+            navigate("/dashboard");
+        }
     }
     return (
         <div className="container auth-page">

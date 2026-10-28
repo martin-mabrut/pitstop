@@ -7,7 +7,7 @@ export interface SafetyInspection {
   dueTimeAt: string
   doneAt?: string
   type: string
-  vehicule: Vehicle[]
+  vehicle?: Vehicle
 }
 
 interface CardSafetyInspectionProps {
@@ -21,7 +21,7 @@ function formatDate(date?: string) {
 function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
   return (
     <div className="card-safety">
-      <div className="row align-items-center">
+      <div className="row align-items-center gx-4">
         <div className="col-auto">
           <div className="card-safety__lights">
             <span className="card-safety__light card-safety__light--red" />
@@ -32,6 +32,9 @@ function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
 
         <div className="col">
           <h3>Contrôle technique</h3>
+          {inspection.vehicle && (
+            <p className="fw-bold">{inspection.vehicle.model}</p>
+          )}
           <p>Type : {inspection.type}</p>
           <p>Échéance : {formatDate(inspection.dueTimeAt)}</p>
           <p>Réalisé le : {formatDate(inspection.doneAt)}</p>

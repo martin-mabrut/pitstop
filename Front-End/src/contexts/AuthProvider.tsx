@@ -48,8 +48,10 @@ export const AuthProvider = ({ children }) => {
       }
       const res = await meResponse.json();
       setUser(res);
+      return true;
     } catch (error) {
       console.log(error);
+      return false;
     }
   };
 

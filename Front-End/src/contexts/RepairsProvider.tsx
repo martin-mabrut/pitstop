@@ -4,7 +4,7 @@ export interface Repair {
     id: string | number;
     vehicleId: string | number;
     typeOfRepairs: string;
-    repairDate: string;
+    repairedAt: string;
     description: string;
     price: number;
 }

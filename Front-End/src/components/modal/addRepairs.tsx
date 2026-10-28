@@ -19,7 +19,7 @@ export default function AddRepair({ vehicleId, onClose }: AddRepairProps) {
 
         await addRepair(selectedId, {
             typeOfRepairs: form.get('typeOfRepairs') as string,
-            repairDate: form.get('repairDate') as string,
+            repairedAt: form.get('repairedAt') as string,
             description: form.get('description') as string,
             price: Number(form.get('price')),
         });
@@ -46,15 +46,21 @@ export default function AddRepair({ vehicleId, onClose }: AddRepairProps) {
                 )}
                 <label className="form-label w-100 mb-3">
                     Type de réparation
-                    <input name="typeOfRepairs" className="form-control mt-1" required />
+                    <select name="typeOfRepairs" className="form-select mt-1" required>
+                        <option value="Carrosserie">Carrosserie</option>
+                        <option value="Mécaniques">Mécanique</option>
+                        <option value="Electriques">Électrique</option>
+                        <option value="Peinture">Peinture</option>
+                        <option value="Autre">Autre</option>
+                    </select>
                 </label>
                 <label className="form-label w-100 mb-3">
                     Date de la réparation
-                    <input name="repairDate" type="date" className="form-control mt-1" required />
+                    <input name="repairedAt" type="date" className="form-control mt-1" required />
                 </label>
                 <label className="form-label w-100 mb-3">
                     Description
-                    <input name="description" className="form-control mt-1" required />
+                    <input name="description" className="form-control mt-1" maxLength={200} />
                 </label>
                 <label className="form-label w-100 mb-3">
                     Prix (€)

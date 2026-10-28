@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import { useVehicle, type Vehicle } from '../../contexts/VehicleProvider';
 import Modal from './modal';
 
@@ -9,10 +10,14 @@ interface DeleteVehicleProps {
 
 export default function DeleteVehicle({ vehicle, onClose }: DeleteVehicleProps) {
     const { deleteVehicle } = useVehicle();
+    const navigate = useNavigate();
 
     async function handleDelete() {
-        await deleteVehicle(vehicle.id);
+        const success = await deleteVehicle(vehicle.id);
         onClose();
+        if (success) {
+            navigate('/dashboard');
+        }
     }
 
     return (

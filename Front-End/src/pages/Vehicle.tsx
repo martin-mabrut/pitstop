@@ -59,7 +59,16 @@ export default function VehiclePage() {
                     Supprimer
                 </button>
             </div>
-            <p>Identifiant : {vehicle.id}</p>
+            <ul className="list-unstyled mb-4">
+                <li>Type : {vehicle.vehicleType}</li>
+                <li>Immatriculation : {vehicle.registrationNumber}</li>
+                <li>Version : {vehicle.version || '-'}</li>
+                <li>Date de première immatriculation : {formatDate(vehicle.firstRegistrationDateAt)}</li>
+                <li>Carburant : {vehicle.typeOfFuel}</li>
+                <li>Boîte de vitesses : {vehicle.typeOfTransmission}</li>
+                <li>Kilométrage : {vehicle.mileage ? `${vehicle.mileage.toLocaleString('fr-FR')} km` : '-'}</li>
+                <li>Kilomètres par jour : {vehicle.kmPerDay ? `${vehicle.kmPerDay} km` : '-'}</li>
+            </ul>
 
             <div>
                 <h2>Mes échéances</h2>
@@ -93,7 +102,7 @@ export default function VehiclePage() {
                         {repairsList.slice(0, 3).map(function (repair) {
                             return (
                                 <li key={repair.id}>
-                                    {formatDate(repair.repairDate)} - {repair.typeOfRepairs} : {repair.description} ({repair.price} €)
+                                    {formatDate(repair.repairedAt)} - {repair.typeOfRepairs} : {repair.description} ({repair.price} €)
                                 </li>
                             );
                         })}

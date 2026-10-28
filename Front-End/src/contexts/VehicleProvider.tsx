@@ -9,7 +9,7 @@ export interface Vehicle {
     brand: string;
     model: string;
     version: string;
-    firstRegistrationDate: string;
+    firstRegistrationDateAt: string;
     typeOfFuel: string;
     typeOfTransmission: string;
     mileage: number;
@@ -20,9 +20,9 @@ export interface Vehicle {
 interface VehicleContextType {
     vehicles: Vehicle[];
     getVehicle: () => Promise<void>;
-    addVehicle: (data: Omit<Vehicle, 'id'>) => Promise<void>;
+    addVehicle: (data: Omit<Vehicle, 'id'>) => Promise<Vehicle | undefined>;
     updateVehicle: (id: Vehicle['id'], data: Partial<Omit<Vehicle, 'id'>>) => Promise<void>;
-    deleteVehicle: (id: Vehicle['id']) => Promise<void>;
+    deleteVehicle: (id: Vehicle['id']) => Promise<boolean>;
 }
 
 const API_URL = 'http://localhost:8000/api/vehicle';
@@ -60,8 +60,8 @@ export const VehicleProvider = ({ children }) => {
             });
             const result = await response.json();
             if (response.ok) {
-                setVehicle((actual) => [...actual, result]);
-                return result
+                getVehicle();
+                return result.vehicle;
             }
         } catch (error) {
             console.log(error);
@@ -93,9 +93,12 @@ export const VehicleProvider = ({ children }) => {
             });
             if (response.ok) {
                 setVehicle((actual) => actual.filter((v) => v.id !== id));
+                return true;
             }
+            return false;
         } catch (error) {
             console.log(error);
+            return false;
         }
     };
 
