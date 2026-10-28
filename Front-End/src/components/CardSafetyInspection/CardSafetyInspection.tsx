@@ -1,4 +1,5 @@
 import './CardSafetyInspection.css'
+import type { ReactNode } from 'react'
 import type { Vehicle } from '../../contexts/VehicleProvider'
 
 
@@ -12,6 +13,7 @@ export interface SafetyInspection {
 
 interface CardSafetyInspectionProps {
   inspection: SafetyInspection
+  children?: ReactNode
 }
 
 function formatDate(date?: string) {
@@ -34,31 +36,43 @@ function getLightsClass(date: string) {
   return 'card-safety__lights--yellow'
 }
 
-function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
+const TYPE_LABELS: Record<string, string> = {
+  regular: 'Périodique',
+  followUp: 'Contre-visite',
+}
+
+function CardSafetyInspection({ inspection, children }: CardSafetyInspectionProps) {
   const lightsClass = getLightsClass(inspection.dueTimeAt)
 
   return (
     <div className="card-safety">
-      <div className="row align-items-center gx-4">
-        <div className="col-auto">
-          <div className={`card-safety__lights ${lightsClass}`}>
-            <span className="card-safety__light card-safety__light--red" />
-            <span className="card-safety__light card-safety__light--yellow" />
-            <span className="card-safety__light card-safety__light--green" />
-          </div>
-        </div>
+      <div className={`card-safety__lights ${lightsClass}`}>
+        <span className="card-safety__light card-safety__light--red" />
+        <span className="card-safety__light card-safety__light--yellow" />
+        <span className="card-safety__light card-safety__light--green" />
+      </div>
 
-        <div className="col">
-          <h3>Contrôle technique</h3>
-          {inspection.vehicle && (
-            <p className="fw-bold">{inspection.vehicle.model}</p>
-          )}
-          <p>Type : {inspection.type}</p>
+      <div className="card-safety__content">
+        <p className="card-safety__label">Contrôle technique</p>
+        <h3 className="card-safety__title">
+          {inspection.vehicle ? inspection.vehicle.model : 'Mon véhicule'}
+        </h3>
+        <span className="card-safety__badge">{TYPE_LABELS[inspection.type] ?? inspection.type}</span>
+
+        <dl className="card-safety__details">
           {!inspection.doneAt && (
-            <p>Échéance : {formatDate(inspection.dueTimeAt)}</p>
+            <div>
+              <dt>Échéance</dt>
+              <dd>{formatDate(inspection.dueTimeAt)}</dd>
+            </div>
           )}
-          <p>Réalisé le : {formatDate(inspection.doneAt)}</p>
-        </div>
+          <div>
+            <dt>Réalisé le</dt>
+            <dd>{formatDate(inspection.doneAt)}</dd>
+          </div>
+        </dl>
+
+        {children}
       </div>
     </div>
   )

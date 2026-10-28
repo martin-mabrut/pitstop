@@ -16,78 +16,78 @@ class SafetyInspectionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, SafetyInspection::class);
     }
-    
+
     public function findAllFromAVehicle(int $id): array
     {
         return $this->createQueryBuilder('s')
-        ->join('s.vehicle', 'v')
-        ->where('v.id = :id')
-        ->setParameter('id', $id)
-        ->orderBy('s.dueTimeAt', 'DESC')
-        ->getQuery()
-        ->getResult();
+            ->join('s.vehicle', 'v')
+            ->where('v.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('s.dueTimeAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findLastTwo(int $limit, int $id):array
+    public function findLastTwo(int $limit, int $id): array
     {
         return $this->createQueryBuilder('s')
-        ->orderBy('s.dueTimeAt', 'DESC')
-        ->join('s.vehicle', 'v')
-        ->where('v.id = :id')
-        ->setParameter('id', $id)
-        ->setMaxResults($limit)
-        ->getQuery()
-        ->getResult();
+            ->orderBy('s.dueTimeAt', 'DESC')
+            ->join('s.vehicle', 'v')
+            ->where('v.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findLastNotDone(int $id):array
+    public function findLastNotDone(int $id): array
     {
         return $this->createQueryBuilder('s')
-        ->orderBy('s.dueTimeAt', 'DESC')
-        ->join('s.vehicle', 'v')
-        ->andwhere('v.id = :id')
-        ->setParameter('id', $id)
-        ->andwhere('s.doneAt is NULL')
-        ->setMaxResults(1)
-        ->getQuery()
-        ->getResult();
+            ->orderBy('s.dueTimeAt', 'DESC')
+            ->join('s.vehicle', 'v')
+            ->andwhere('v.id = :id')
+            ->setParameter('id', $id)
+            ->andwhere('s.doneAt is NULL')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findAllNotDoneFromAllVehicle(User $user):array
+    public function findAllNotDoneFromAllVehicle(User $user): array
     {
         return $this->createQueryBuilder('s')
-        ->join('s.vehicle', 'v')
-        ->join('v.user', 'u')
-        ->where('s.doneAt is NULL')
-        ->andWhere('u = :user')
-        ->setParameter('user', $user)
-        ->orderBy('s.dueTimeAt', 'ASC')
-        ->setMaxResults(5)
-        ->getQuery()
-        ->getResult();
+            ->join('s.vehicle', 'v')
+            ->join('v.user', 'u')
+            ->where('s.doneAt is NULL')
+            ->andWhere('u = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.dueTimeAt', 'ASC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
     }
-//    /**
-//     * @return SafetyInspection[] Returns an array of SafetyInspection objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return SafetyInspection[] Returns an array of SafetyInspection objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('s.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?SafetyInspection
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?SafetyInspection
+    //    {
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

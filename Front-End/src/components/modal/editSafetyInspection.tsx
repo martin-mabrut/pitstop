@@ -111,7 +111,7 @@ export default function EditSafetyInspection({
 
             if (!success) {
                 setError(
-                    'Modification impossible. Vérifie les erreurs dans la console.'
+                    'Modification impossible.'
                 );
                 return;
             }
@@ -149,7 +149,7 @@ export default function EditSafetyInspection({
 
             if (!success) {
                 setError(
-                    'Validation impossible. Vérifie la route Symfony et les identifiants.'
+                    'Validation impossible.'
                 );
                 return;
             }

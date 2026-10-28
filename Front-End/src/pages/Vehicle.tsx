@@ -17,6 +17,7 @@ import AddRepair from '../components/modal/addRepairs';
 import RepairHistory from '../components/modal/repairHistory';
 import SafetyHistory from '../components/modal/safetyHistory';
 import EditSafetyInspection from '../components/modal/editSafetyInspection';
+import './Vehicle.css';
 
 function formatDate(date?: string | null): string {
     if (!date) return '-';
@@ -140,16 +141,40 @@ export default function VehiclePage() {
                     Supprimer
                 </button>
             </div>
-            <ul className="list-unstyled mb-4">
-                <li>Type : {vehicle.vehicleType}</li>
-                <li>Immatriculation : {vehicle.registrationNumber}</li>
-                <li>Version : {vehicle.version || '-'}</li>
-                <li>Date de première immatriculation : {formatDate(vehicle.firstRegistrationDateAt)}</li>
-                <li>Carburant : {vehicle.typeOfFuel}</li>
-                <li>Boîte de vitesses : {vehicle.typeOfTransmission}</li>
-                <li>Kilométrage : {vehicle.mileage ? `${vehicle.mileage.toLocaleString('fr-FR')} km` : '-'}</li>
-                <li>Kilomètres par jour : {vehicle.kmPerDay ? `${vehicle.kmPerDay} km` : '-'}</li>
-            </ul>
+            <div className="vehicle-info">
+                <span className="vehicle-info__plate">{vehicle.registrationNumber}</span>
+
+                <dl className="vehicle-info__grid">
+                    <div>
+                        <dt>Type</dt>
+                        <dd>{vehicle.vehicleType}</dd>
+                    </div>
+                    <div>
+                        <dt>Version</dt>
+                        <dd>{vehicle.version || '-'}</dd>
+                    </div>
+                    <div>
+                        <dt>1re immatriculation</dt>
+                        <dd>{formatDate(vehicle.firstRegistrationDateAt)}</dd>
+                    </div>
+                    <div>
+                        <dt>Carburant</dt>
+                        <dd>{vehicle.typeOfFuel}</dd>
+                    </div>
+                    <div>
+                        <dt>Boîte de vitesses</dt>
+                        <dd>{vehicle.typeOfTransmission}</dd>
+                    </div>
+                    <div>
+                        <dt>Kilométrage</dt>
+                        <dd>{vehicle.mileage ? `${vehicle.mileage.toLocaleString('fr-FR')} km` : '-'}</dd>
+                    </div>
+                    <div>
+                        <dt>Km par jour</dt>
+                        <dd>{vehicle.kmPerDay ? `${vehicle.kmPerDay} km` : '-'}</dd>
+                    </div>
+                </dl>
+            </div>
 
             <section>
                 <div className="d-flex align-items-center gap-2 mb-2">
@@ -170,19 +195,19 @@ export default function VehiclePage() {
                         >
                             <CardSafetyInspection
                                 inspection={inspection}
-                            />
-
-                            <button
-                                type="button"
-                                className="btn btn-sm btn-primary mt-2"
-                                onClick={() =>
-                                    setSelectedInspection(inspection)
-                                }
                             >
-                                {index === 0
-                                    ? 'Modifier / Valider'
-                                    : 'Modifier'}
-                            </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-primary"
+                                    onClick={() =>
+                                        setSelectedInspection(inspection)
+                                    }
+                                >
+                                    {index === 0
+                                        ? 'Modifier / Valider'
+                                        : 'Modifier'}
+                                </button>
+                            </CardSafetyInspection>
                         </div>
                     ))}
 
@@ -194,41 +219,47 @@ export default function VehiclePage() {
                 </div>
             </section>
 
-            <div className="row g-3 mt-4">
-                <section className="col-12 col-lg-6">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                        <h2 className="mb-0">
-                            Historique des réparations
-                        </h2>
+            <section className="mt-4 col-12 col-lg-6">
+                <div className="d-flex align-items-center gap-2 mb-2">
+                    <h2 className="mb-0">
+                        Historique des réparations
+                    </h2>
 
-                        <button
-                            type="button"
-                            className="btn btn-sm btn-success"
-                            onClick={() => setShowAddRepair(true)}
-                        >
-                            Ajouter
-                        </button>
-                    </div>
-
-                    <ul>
-                        {repairsList.slice(0, 3).map((repair) => (
-                            <li key={repair.id}>
-                                {formatDate(repair.repairedAt)} -{' '}
-                                {repair.typeOfRepairs} :{' '}
-                                {repair.description} ({repair.price} €)
-                            </li>
-                        ))}
-                    </ul>
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-success"
+                        onClick={() => setShowAddRepair(true)}
+                    >
+                        Ajouter
+                    </button>
 
                     <button
                         type="button"
                         className="btn btn-sm btn-secondary"
                         onClick={() => setShowHistory(true)}
                     >
-                        Historique des réparations
+                        Voir tout
                     </button>
-                </section>
-            </div>
+                </div>
+
+                {repairsList.length === 0 ? (
+                    <p className="vehicle-repairs__empty">Aucune réparation pour ce véhicule.</p>
+                ) : (
+                    <ul className="vehicle-repairs">
+                        {repairsList.slice(0, 3).map((repair) => (
+                            <li key={repair.id} className="vehicle-repairs__item">
+                                <span className="vehicle-repairs__date">
+                                    {formatDate(repair.repairedAt)}
+                                </span>
+                                <span>{repair.typeOfRepairs}</span>
+                                <span className="vehicle-repairs__price">
+                                    {repair.price != null ? `${repair.price.toLocaleString('fr-FR')} €` : '-'}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
 
             {showEdit && (
                 <EditVehicle
