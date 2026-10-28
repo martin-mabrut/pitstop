@@ -74,13 +74,6 @@ export const SafetyInspectionProvider = ({ children }) => {
             );
             const res = await response.json();
             console.log(res);
-
-            // if (response) {
-
-            //     // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
-
-            //     setSafetyList(safetyInspectionList);
-            // }
         } catch (error) {
             console.log(error);
         }

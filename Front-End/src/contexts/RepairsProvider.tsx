@@ -1,13 +1,25 @@
-import { useContext, createContext } from 'react';
-import { useState } from 'react';
+import { useContext, createContext, useState, type ReactNode } from 'react';
 
-const RepairsContext = createContext(null);
+export interface Repair {
+    id: string | number;
+    vehicleId: string | number;
+    typeOfRepairs: string;
+    repairDate: string;
+    description: string;
+    price: number;
+}
 
-export const RepairsProvider = ({ children }) => {
+type RepairData = Omit<Repair, 'id' | 'vehicleId'>;
 
-    const API_URL = 'http://localhost:8000/api/repairs';
+interface RepairsContextType {
+    repairsList: Repair[];
+    getRepairs: (vehicleId: string | number) => Promise<void>;
+    addRepair: (vehicleId: string | number, data: RepairData) => Promise<void>;
+    modifyRepair: (vehicleId: string | number, repairId: Repair['id'], data: Partial<RepairData>) => Promise<void>;
+    deleteRepair: (vehicleId: string | number, repairId: Repair['id']) => Promise<void>;
+}
 
-    const [repairsList, setRepairsList] = useState([]);
+const API_URL = 'http://localhost:3000/repairs';
 
     const getRepairs = async (vehicleId) => {
         try {
@@ -28,9 +40,12 @@ export const RepairsProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
         }
+    } catch (error) {
+        console.log(error);
     }
+}
 
-    const addRepair = async (vehicleId, data) => {
+    async function addRepair(vehicleId: string | number, data: RepairData) {
         try {
             const response = await fetch(
                 `${API_URL}/add/${vehicleId}`,
@@ -52,7 +67,7 @@ export const RepairsProvider = ({ children }) => {
         }
     }
 
-    const modifyRepair = async (vehicleId, repairId, data) => {
+    async function modifyRepair(vehicleId: string | number, repairId: Repair['id'], data: Partial<RepairData>) {
         try {
             const response = await fetch(
                 `${API_URL}/update/${vehicleId}/${repairId}`,
@@ -74,7 +89,7 @@ export const RepairsProvider = ({ children }) => {
         }
     }
 
-    const deleteRepair = async (vehicleId, repairId) => {
+    async function deleteRepair(vehicleId: string | number, repairId: Repair['id']) {
         try {
             const response = await fetch(
                 `${API_URL}/delete/${vehicleId}/${repairId}`,
@@ -95,17 +110,19 @@ export const RepairsProvider = ({ children }) => {
         }
     }
 
-
-
-
-
     return (
-        <RepairsContext.Provider value={{ getRepairs, repairsList }}>
+        <RepairsContext.Provider
+            value={{ repairsList, getRepairs, addRepair, modifyRepair, deleteRepair }}
+        >
             {children}
         </RepairsContext.Provider>
     );
 }
 
-export const useRepairs = () => {
-    return useContext(RepairsContext);
+export function useRepairs() {
+    const context = useContext(RepairsContext);
+    if (!context) {
+        throw new Error('useRepairs doit être utilisé dans un RepairsProvider');
+    }
+    return context;
 }

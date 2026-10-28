@@ -98,6 +98,38 @@
       "price": 300,
       "vehicleId": "1509737",
       "garageId": ""
+    },
+    {
+      "typeOfRepairs": "Plaquettes de freins + disques",
+      "repairDate": "2026-11-04",
+      "description": "C'est cher frere",
+      "price": 450,
+      "vehicleId": "1209737",
+      "id": "felXUctqjYk"
+    },
+    {
+      "typeOfRepairs": "vidange",
+      "repairDate": "2026-10-29",
+      "description": "Vidange",
+      "price": 50,
+      "vehicleId": "1209737",
+      "id": "FDPmmZFSbg8"
+    },
+    {
+      "typeOfRepairs": "vidange",
+      "repairDate": "2026-11-04",
+      "description": "Vidange",
+      "price": 60,
+      "vehicleId": "1209737",
+      "id": "yZqeIZXrQA0"
+    },
+    {
+      "typeOfRepairs": "test",
+      "repairDate": "2026-11-07",
+      "description": "test",
+      "price": 555,
+      "vehicleId": "1209737",
+      "id": "LHpI2JyvnRw"
     }
   ],
   "safetyInspection": [

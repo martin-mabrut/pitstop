@@ -6,6 +6,7 @@ import { useUser } from '../contexts/UserProvider'
 import CardVehicule from '../components/CardVehicule/CardVehicule';
 import AddVehicle from '../components/modal/addVehicle';
 import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
+import AddRepair from '../components/modal/addRepairs';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -17,12 +18,11 @@ export default function Dashboard() {
 
     const [showAdd, setShowAdd] = useState(false);
 
+    const [showAddRepair, setShowAddRepair] = useState(false);
+
     useEffect(() => {
-        getVehicle(); getSafetyInspectionsNotDone(); getUser();
+        getVehicle();  getSafetyInspectionsNotDone(); getUser();
     }, []);
-
-    console.log(safetyList);
-
 
     return (
         <div className="container">
@@ -31,13 +31,13 @@ export default function Dashboard() {
 
             <div className="row g-3 mb-4">
                 <div className="col-12 col-lg-6">
-                    <button type="button" className="dashboard-action">
+                    <button type="button" className="dashboard-action" onClick={function () { setShowAddRepair(true); }}>
                         <span className="dashboard-action__plus">+</span>
                         Ajouter une réparation
                     </button>
                 </div>
                 <div className="col-12 col-lg-6">
-                    <button type="button" className="dashboard-action" onClick={() => setShowAdd(true)}>
+                    <button type="button" className="dashboard-action" onClick={function () { setShowAdd(true); }}>
                         <span className="dashboard-action__plus">+</span>
                         Ajouter un véhicule
                     </button>
@@ -77,6 +77,10 @@ export default function Dashboard() {
 
             {showAdd && (
                 <AddVehicle onClose={() => setShowAdd(false)} />
+            )}
+
+            {showAddRepair && (
+                <AddRepair onClose={function () { setShowAddRepair(false); }} />
             )}
         </div>
     );
