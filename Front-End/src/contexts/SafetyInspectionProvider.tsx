@@ -106,8 +106,54 @@ export const SafetyInspectionProvider = ({ children }) => {
         }
     }
 
+    const safetyInspectionYes = async (vehicleId, doneAt) => {
+
+        try {
+            const response = await fetch(
+                `futurUrl/${vehicleId}/`,
+                {
+                    // credentials: 'include',
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ doneAt })
+                }
+            );
+            const res = await response.json();
+            console.log(res);
+
+            getSafetyInspections(vehicleId);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const safetyInspectionNo = async (vehicleId) => {
+        try {
+            const response = await fetch(
+                `futurUrl/${vehicleId}/`,
+                {
+                    // credentials: 'include',
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            const res = await response.json();
+            console.log(res);
+
+            getSafetyInspections(vehicleId);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <SafetyInspectionContext.Provider value={{ getSafetyInspections, safetyList }}>
+        <SafetyInspectionContext.Provider value={{ getSafetyInspections, safetyList, safetyInspectionYes, safetyInspectionNo }}>
             {children}
         </SafetyInspectionContext.Provider>
     );
