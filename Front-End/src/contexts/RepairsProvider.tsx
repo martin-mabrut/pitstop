@@ -5,15 +5,16 @@ const RepairsContext = createContext(null);
 
 export const RepairsProvider = ({ children }) => {
 
-    const API_URL = 'http://localhost:3000/repairs';
+    const API_URL = 'http://localhost:8000/api/repairs';
 
     const [repairsList, setRepairsList] = useState([]);
 
     const getRepairs = async (vehicleId) => {
         try {
             const response = await fetch(
-                `${API_URL}/${vehicleId}`,
+                `${API_URL}/all/${vehicleId}`,
                 {
+                    credentials: "include",
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -32,9 +33,9 @@ export const RepairsProvider = ({ children }) => {
     const addRepair = async (vehicleId, data) => {
         try {
             const response = await fetch(
-                `${API_URL}/${vehicleId}`,
+                `${API_URL}/add/${vehicleId}`,
                 {
-                    // credentials: "include",
+                    credentials: "include",
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -54,9 +55,9 @@ export const RepairsProvider = ({ children }) => {
     const modifyRepair = async (vehicleId, repairId, data) => {
         try {
             const response = await fetch(
-                `${API_URL}/${vehicleId}/${repairId}`,
+                `${API_URL}/update/${vehicleId}/${repairId}`,
                 {
-                    // credentials: "include",
+                    credentials: "include",
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -76,9 +77,9 @@ export const RepairsProvider = ({ children }) => {
     const deleteRepair = async (vehicleId, repairId) => {
         try {
             const response = await fetch(
-                `${API_URL}/${vehicleId}/${repairId}`,
+                `${API_URL}/delete/${vehicleId}/${repairId}`,
                 {
-                    // credentials: "include",
+                    credentials: "include",
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",

@@ -13,7 +13,7 @@ function AppRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/signin" element={<Signin />} />
 
-            <Route path="/dashboard/:uuid" element={<Dashboard />} />
+            <Route path="/dashboard/" element={<Dashboard />} />
             <Route path="/vehicle/:uuid" element={<Vehicle />} />
 
         </Routes>
