@@ -243,7 +243,7 @@ final class SafetyInspectionController extends AbstractController
         $em->persist($safetyInspection);
         $em->flush();
 
-        return new Response();
+        return $this->json(['safetyInspection'=>$safetyInspection, 'safetyInspectionNext'=>$safetyInspectionNext],200,[],['groups'=>['safety:read']]);
     }
 
     #[Route('/api/safetyInspection/allNotDoneFromEveryVehicle', name: 'api_safety_inspection_all_vehicle', methods:['GET'])]
