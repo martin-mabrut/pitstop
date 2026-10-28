@@ -31,11 +31,13 @@ export const VehicleProvider = ({ children }) => {
 
         try {
             const response = await fetch(
-                `${API_URL}/all`);
+                `${API_URL}/all`, {
+                credentials: "include"
+            });
 
             const result = await response.json();
-            if (result) {
-                setVehicle(result);
+            if (response.ok) {
+                setVehicle(result.vehicles);
             }
         } catch (error) {
             console.log(error);
@@ -45,6 +47,7 @@ export const VehicleProvider = ({ children }) => {
     const addVehicle = async (data: Omit<Vehicle, 'id'>) => {
         try {
             const response = await fetch(`${API_URL}/add/`, {
+                credentials: "include",
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -62,6 +65,7 @@ export const VehicleProvider = ({ children }) => {
     const updateVehicle = async (id: Vehicle['id'], data: Partial<Omit<Vehicle, 'id'>>) => {
         try {
             const response = await fetch(`${API_URL}/update/${id}`, {
+                credentials: "include",
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -78,7 +82,8 @@ export const VehicleProvider = ({ children }) => {
     const deleteVehicle = async (id: Vehicle['id']) => {
         try {
             const response = await fetch(`${API_URL}/delete/${id}`, {
-                method: 'DELETE',
+                credentials: "include",
+                method: 'DELETE'
             });
             if (response.ok) {
                 setVehicle((actual) => actual.filter((v) => v.id !== id));
