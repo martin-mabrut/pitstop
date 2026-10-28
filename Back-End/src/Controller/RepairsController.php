@@ -79,4 +79,54 @@ final class RepairsController extends AbstractController
         $em->flush();
         return new Response();
     }
+
+    #[Route('/api/repairs/update/{vId}/{id}', name: 'api_repairs_update', methods:['PATCH'])]
+    public function update(int $id, int $vId, RepairsRepository $repairsRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em):Response{
+        $user = $this->security->getUser();
+        $parameters = json_decode($request->getContent(),true);
+        $vehicle = $vehicleRepository->find($vId);
+        if($vehicle === null){
+            return new Response("Vehicle not found", 404);
+        }
+        if($vehicle->getUser() != $user){
+            return new Response("Invalid credentials", 403);
+        }
+        $repairs = $repairsRepository->find($id);
+        if($repairs->getVehicle()!== $vehicle){
+            return new Response("Invalid credentials", 403);
+        }
+        $typeOfRepairs = $parameters['typeOfRepairs'];
+        $description = $parameters['description'];
+        $price = $parameters['price'];
+        $repairs->setTypeOfRepairs($typeOfRepairs);
+        if($description!=="") $repairs->setDescription($description);
+        if($price!==0) $repairs->setPrice($price);
+        if($parameters['repairedAt']!==""){
+            $repairedAt = new DateTimeImmutable($parameters['repairedAt']);
+            $repairs->setRepairedAt($repairedAt);
+        }
+        $em->persist($repairs);
+        $em->flush();
+        return new Response();
+    }
+
+    #[Route('/api/repairs/delete/{vId}/{id}', name: 'api_repairs_delete', methods:['DELETE'])]
+    public function delete(int $id, int $vId, RepairsRepository $repairsRepository, VehicleRepository $vehicleRepository, EntityManagerInterface $em):Response
+    {
+        $user = $this->security->getUser();
+        $vehicle = $vehicleRepository->find($vId);
+        if($vehicle === null){
+            return new Response("Vehicle not found", 404);
+        }
+        if($vehicle->getUser() != $user){
+            return new Response("Invalid credentials", 403);
+        }
+        $repairs = $repairsRepository->find($id);
+        if($repairs->getVehicle()!== $vehicle){
+            return new Response("Invalid credentials", 403);
+        }
+        $em->remove($repairs);
+        $em->flush();
+        return new Response();
+    }
 }

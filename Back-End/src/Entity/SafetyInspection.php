@@ -30,6 +30,7 @@ class SafetyInspection
 
     #[ORM\ManyToOne(inversedBy: 'safetyInspections')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['safety:read'])]
     private ?Vehicle $vehicle = null;
 
     #[ORM\ManyToOne(inversedBy: 'safetyInspections')]

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SafetyInspection;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -42,6 +43,20 @@ class SafetyInspectionRepository extends ServiceEntityRepository
         ->orderBy('s.dueTimeAt', 'DESC')
         ->where('s.doneAt is NULL')
         ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findAllNotDoneFromAllVehicle(User $user):array
+    {
+        return $this->createQueryBuilder('s')
+        ->join('s.vehicle', 'v')
+        ->join('v.user', 'u')
+        ->where('s.doneAt is NULL')
+        ->andWhere('u = :user')
+        ->setParameter('user', $user)
+        ->orderBy('s.dueTimeAt', 'ASC')
+        ->setMaxResults(5)
         ->getQuery()
         ->getResult();
     }

@@ -170,4 +170,12 @@ final class SafetyInspectionController extends AbstractController
 
         return new Response();
     }
+
+    #[Route('/api/safetyInspection/allNotDoneFromEveryVehicle', name: 'api_safety_inspection_all_vehicle', methods:['GET'])]
+    public function findAllNotDoneFromAllVehicle(SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository): Response
+    {
+        $user = $this->security->getUser(); 
+        $safetyInspections = $safetyInspectionRepository->findAllNotDoneFromAllVehicle($user);
+        return $this->json(['safetyInspections'=>$safetyInspections],200,[],['groups'=>['safety:read']]);
+    }
 }

@@ -6,6 +6,7 @@ use App\Repository\VehicleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: VehicleRepository::class)]
 class Vehicle
@@ -19,15 +20,19 @@ class Vehicle
     private ?string $vehicleType = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['safety:read'])]
     private ?string $registrationNumber = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['safety:read'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['safety:read'])]
     private ?string $model = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['safety:read'])]
     private ?string $version = null;
 
     #[ORM\Column]
