@@ -1,0 +1,14 @@
+.card-vehicule {
+  height: 100%;
+  padding: 16px;
+  border: 6px solid var(--color-grey);
+  background-color: var(--color-grey);
+  color: var(--color-white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-shadow:
+    -1px -1px 0 rgba(35, 35, 34, 0.6),
+    1px -1px 0 rgba(35, 35, 34, 0.6),
+    -1px 1px 0 rgba(35, 35, 34, 0.6),
+    1px 1px 0 rgba(35, 35, 34, 0.6);
+  border-radius: 12px;
+}

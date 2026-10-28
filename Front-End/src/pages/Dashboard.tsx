@@ -1,70 +1,128 @@
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useVehicle, type Vehicle } from '../contexts/VehicleProvider';
-import { useSafety } from '../contexts/SafetyInspectionProvider'
+import { useSafety } from '../contexts/SafetyInspectionProvider';
+import { useUser } from '../contexts/UserProvider';
+
+import CardVehicule from '../components/CardVehicule/CardVehicule';
+import CardSafetyInspection from '../components/CardSafetyInspection/CardSafetyInspection';
+import AddVehicle from '../components/modal/addVehicle';
+import AddSafetyWhenVehicleCreated from '../components/modal/addSafetyWhenVehicleCreated';
+import AddRepair from '../components/modal/addRepairs';
+import './Dashboard.css';
 
 export default function Dashboard() {
-    const { vehicles, getVehicle, deleteVehicle, updateVehicle, addVehicle } = useVehicle();
+    const { vehicles, getVehicle } = useVehicle();
+    const { getSafetyInspectionsNotDone, safetyList } = useSafety();
+    const { getUser, user } = useUser();
 
-    const { getSafetyInspections, safetyList } = useSafety();
+    const [showAdd, setShowAdd] = useState(false);
+    const [showAddRepair, setShowAddRepair] = useState(false);
+    const [createdVehicle, setCreatedVehicle] = useState<Vehicle | null>(null);
 
     useEffect(() => {
-        getVehicle(); getSafetyInspections();
+        void getVehicle();
+        void getSafetyInspectionsNotDone();
+        void getUser();
     }, []);
 
-    const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        const data = new FormData(form);
-        await addVehicle({
-            brand: data.get('brand') as string,
-            model: data.get('model') as string,
-        });
-        form.reset();
-    };
-
-
-    const handleUpdate = async (vehicle: Vehicle) => {
-        await updateVehicle(vehicle.id, { model: vehicle.model + ' (modifié)' });
-    };
-
-    // SUPPRIMER
-    const handleDelete = async (id: Vehicle['id']) => {
-        await deleteVehicle(id);
-    };
-
-
     return (
-        <div>
-            <h1>Mes véhicules</h1>
+        <div className="container">
+            <h1>Dashboard</h1>
 
-            <form onSubmit={handleAdd}>
-                <input name="brand" placeholder="Marque" required />
-                <input name="model" placeholder="Modele" required />
-                <button type="submit">Ajouter</button>
-            </form>
+            <p>{user?.username}</p>
 
-            <h1>Mes véhicules</h1>
-            <ul>
-                {vehicles.map((v) => (
-                    <li key={v.id}>
-                        <Link to={`/vehicle/${v.id}`}>{v.brand} {v.model}</Link>
-                        <button onClick={() => handleUpdate(v)}>Modifier</button>
-                        <button onClick={function () { handleDelete(v.id); }}>Supprimer</button>
-                    </li>
-                ))}
-            </ul>
+            <div className="row g-3 mb-4">
+                <div className="col-12 col-lg-6">
+                    <button
+                        type="button"
+                        className="dashboard-action"
+                        onClick={() => setShowAddRepair(true)}
+                    >
+                        <span className="dashboard-action__plus">+</span>
+                        Ajouter une réparation
+                    </button>
+                </div>
 
-            <div>
-                <h2>Mes échéances</h2>
-                <ul>
-                    {safetyList.map((ct) => (
-                        <li key={ct.id}>
-                            {ct.dueTime}
-                        </li>
-                    ))}
-                </ul>
+                <div className="col-12 col-lg-6">
+                    <button
+                        type="button"
+                        className="dashboard-action"
+                        onClick={() => setShowAdd(true)}
+                    >
+                        <span className="dashboard-action__plus">+</span>
+                        Ajouter un véhicule
+                    </button>
+                </div>
             </div>
+
+            <section className="mb-4">
+                <h2>Mes échéances</h2>
+
+                <div className="row g-3">
+                    {safetyList.map((inspection) => (
+                        <div
+                            className="col-12 col-lg-6"
+                            key={inspection.id}
+                        >
+                            <CardSafetyInspection inspection={inspection} />
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section>
+                <h2>Mes véhicules</h2>
+
+                <div className="row g-3">
+                    {vehicles.map((vehicle) => {
+                        if (vehicle.id == null) {
+                            return null;
+                        }
+
+                        return (
+                            <div
+                                key={vehicle.id}
+                                className="col-12 col-lg-6"
+                            >
+                                <Link
+                                    to={`/vehicle/${vehicle.id}`}
+                                    className="dashboard-vehicles__link"
+                                >
+                                    <CardVehicule vehicle={vehicle} />
+                                </Link>
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+
+            {showAdd && (
+                <AddVehicle
+                    onClose={function () { setShowAdd(false); }}
+                    onCreated={function (vehicle) {
+                        setShowAdd(false);
+                        setCreatedVehicle(vehicle);
+                    }}
+                />
+            )}
+
+            {createdVehicle && (
+                <AddSafetyWhenVehicleCreated
+                    vehicle={createdVehicle}
+                    onClose={function () {
+                        setCreatedVehicle(null);
+                        getSafetyInspectionsNotDone();
+                    }}
+                />
+            )}
+
+            {showAddRepair && (
+                <AddRepair
+                    onClose={() => setShowAddRepair(false)}
+                />
+            )}
         </div>
     );
 }

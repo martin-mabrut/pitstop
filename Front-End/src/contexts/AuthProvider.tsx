@@ -8,49 +8,48 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(localStorage.getItem(TOKEN));
 
   const signin = async (data) => {
-
     try {
-      const response = await fetch(
-        'http://localhost:8000/api/register',
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data)
-        }
-      );
-      const result = await response.json();
-      if (result) {
-        console.log(result);
-      }
+      const response = await fetch("http://localhost:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      return response.ok;
     } catch (error) {
       console.log(error);
+      return false;
     }
-
-  }
-
+  };
 
   const login = async (data) => {
     try {
-      const response = await fetch("http://localhost:8000/api/login_check", {
+      const response = await fetch("http://localhost:8000/api/login", {
+        credentials: "include",
         method: "POST",
         headers: {
           "Content-Type": "application/ld+json",
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
-      if (result) {
-        setUser(result);
-        //rajouer.user
-        localStorage.setItem(TOKEN, JSON.stringify(result.token));
-        console.log(user);
-        console.log(result);
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || "Login failed");
       }
-      throw new Error(result.message);
+      const meResponse = await fetch("http://localhost:8000/api/user", {
+        credentials: "include",
+        method: "GET",
+      });
+      if (!meResponse.ok) {
+        throw new Error("Failed to fetch user");
+      }
+      const res = await meResponse.json();
+      setUser(res);
+      return true;
     } catch (error) {
       console.log(error);
+      return false;
     }
   };
 

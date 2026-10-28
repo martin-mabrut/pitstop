@@ -26,3 +26,9 @@ pour créer la base de données
 
 npm install
 pour installer les librairies
+
+## Pour réaliser les tests côté back
+il faut créer une base de donnée pitstop_test et importer la base de donnée pitstop dedans en enlevant la vérification des clés étrangères dans phpMyAdmin
+pour lancer les tests 
+docker exec -it pitstop-php-1 bash
+vendor/bin/phpunit

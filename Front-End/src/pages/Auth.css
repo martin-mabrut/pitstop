@@ -1,0 +1,31 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  border: 6px solid var(--color-grey);
+  border-radius: 12px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-card__title {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-card__switch {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.auth-card__switch a {
+  color: var(--color-red);
+}

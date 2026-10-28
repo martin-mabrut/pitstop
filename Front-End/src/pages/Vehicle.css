@@ -1,0 +1,113 @@
+/* Mise en page générale */
+.vehicle-page {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.vehicle-page__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--color-grey);
+  text-decoration: none;
+}
+
+.vehicle-page__back:hover {
+  color: var(--color-black);
+}
+
+.vehicle-section {
+  margin-bottom: 40px;
+}
+
+/* Titre à gauche, boutons à droite */
+.vehicle-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vehicle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vehicle-info {
+  margin-bottom: 40px;
+  padding: 20px;
+  border: 6px solid var(--color-grey);
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Immatriculation façon plaque */
+.vehicle-info__plate {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 4px 16px;
+  border: 3px solid var(--color-black);
+  border-radius: 6px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.vehicle-info__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
+  margin: 0;
+}
+
+@media (min-width: 992px) {
+  .vehicle-info__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.vehicle-info__grid dt {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-grey);
+}
+
+.vehicle-info__grid dd {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Historique des réparations */
+/* Aperçu sobre : le détail est dans la modale « Voir tout » */
+.vehicle-repairs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vehicle-repairs__empty {
+  color: var(--color-grey);
+}
+
+.vehicle-repairs__item {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(114, 131, 138, 0.3);
+}
+
+.vehicle-repairs__date {
+  width: 90px;
+  color: var(--color-grey);
+}
+
+.vehicle-repairs__price {
+  margin-left: auto;
+  font-weight: 700;
+}
