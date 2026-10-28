@@ -11,15 +11,17 @@ import './Dashboard.css';
 export default function Dashboard() {
     const { vehicles, getVehicle } = useVehicle();
 
-    const { getSafetyInspections, safetyList } = useSafety();
+    const { getSafetyInspections, safetyList, getSafetyInspectionsNotDone } = useSafety();
 
     const { getUser, user } = useUser();
 
     const [showAdd, setShowAdd] = useState(false);
 
     useEffect(() => {
-        getVehicle(); getSafetyInspections(); getUser();
+        getVehicle(); getSafetyInspectionsNotDone(); getUser();
     }, []);
+
+    console.log(safetyList);
 
 
     return (
@@ -48,16 +50,13 @@ export default function Dashboard() {
             <div>
                 <h2>Mes échéances</h2>
                 <div className="row g-3">
-                    {safetyList[0] && (
-                        <div className="col-12 col-lg-6">
-                            <CardSafetyInspection inspection={safetyList[0]} />
-                        </div>
-                    )}
-                    {safetyList[1] && (
-                        <div className="col-12 col-lg-6">
-                            <CardSafetyInspection inspection={safetyList[1]} />
-                        </div>
-                    )}
+                    {safetyList.map(function (ct) {
+                        return (
+                            <div key={ct.id} className="col-12 col-lg-6">
+                                <CardSafetyInspection inspection={ct} />
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 

@@ -22,11 +22,11 @@ export const SafetyInspectionProvider = ({ children }) => {
                 }
             );
             const safetyInspectionList = await response.json();
-            if (safetyInspectionList) {
+            if (response.ok) {
 
                 // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
 
-                setSafetyList(safetyInspectionList);
+                setSafetyList(safetyInspectionList.safetyInspections);
             }
         } catch (error) {
             console.log(error);
@@ -47,11 +47,11 @@ export const SafetyInspectionProvider = ({ children }) => {
                 }
             );
             const safetyInspectionList = await response.json();
-            if (safetyInspectionList) {
+            if (response.ok) {
 
                 // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
 
-                setSafetyList(safetyInspectionList);
+                setSafetyList(safetyInspectionList.safetyInspections);
             }
         } catch (error) {
             console.log(error);
@@ -180,7 +180,7 @@ export const SafetyInspectionProvider = ({ children }) => {
     }
 
     return (
-        <SafetyInspectionContext.Provider value={{ getSafetyInspections, safetyList, safetyInspectionYes, safetyInspectionNo }}>
+        <SafetyInspectionContext.Provider value={{ getSafetyInspections, safetyList, safetyInspectionYes, safetyInspectionNo, getSafetyInspectionsNotDone }}>
             {children}
         </SafetyInspectionContext.Provider>
     );
