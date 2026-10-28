@@ -16,10 +16,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         getVehicle(); getSafetyInspections();
-    useEffect(function () {
-        getVehicle();
     }, []);
-
 
     return (
         <div>
