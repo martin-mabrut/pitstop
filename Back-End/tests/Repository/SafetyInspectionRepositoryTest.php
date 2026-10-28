@@ -4,7 +4,6 @@ namespace App\Tests;
 
 use App\Repository\SafetyInspectionRepository;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Tests\AbstractKernelTestCase;
 use PHPUnit\Framework\Attributes\TestWith;
 
@@ -42,4 +41,16 @@ class SafetyInspectionRepositoryTest extends AbstractKernelTestCase
         $safetyInspectionList = $repo->findAllFromAVehicle($vId);
         $this->assertEquals(count($safetyInspectionList), $number);
     }
+
+    #[TestWith([23, 2, 2])]
+    #[TestWith([23, 1, 1])]
+    #[TestWith([23, 5, 3])]
+    #[TestWith([40, 2, 0])]
+    public function testFindLastTwo(int $vId,int $limit, int $number): void
+    {
+        $repo = $this->getRepository(SafetyInspectionRepository::class);
+        $safetyInspectionList = $repo->findLastTwo($limit, $vId);
+        $this->assertEquals(count($safetyInspectionList), $number);
+    }
+    
 }
