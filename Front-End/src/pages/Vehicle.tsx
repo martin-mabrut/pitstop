@@ -17,6 +17,7 @@ import AddRepair from '../components/modal/addRepairs';
 import RepairHistory from '../components/modal/repairHistory';
 import SafetyHistory from '../components/modal/safetyHistory';
 import EditSafetyInspection from '../components/modal/editSafetyInspection';
+import ValidSafetyInspection from '../components/modal/validSafetyInspection';
 import './Vehicle.css';
 
 function formatDate(date?: string | null): string {
@@ -46,6 +47,8 @@ export default function VehiclePage() {
     const [showSafetyHistory, setShowSafetyHistory] = useState(false);
 
     const [selectedInspection, setSelectedInspection] =
+        useState<SafetyInspection | null>(null);
+    const [validatingInspection, setValidatingInspection] =
         useState<SafetyInspection | null>(null);
 
     useEffect(() => {
@@ -106,41 +109,36 @@ export default function VehiclePage() {
         vehicle.id ?? vehicle.uuid ?? vehicle.uid
     );
 
-    const canValidate =
-        selectedInspection !== null &&
-        String(selectedInspection.id) ===
-        String(safetyList[0]?.id);
-
     return (
-        <div className="container">
-            <Link
-                to="/dashboard"
-                className="btn btn-sm btn-secondary mb-3"
-            >
-                ← Retour
+        <div className="container vehicle-page">
+            <Link to="/dashboard" className="vehicle-page__back">
+                ← Retour au dashboard
             </Link>
 
-            <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
+            <div className="vehicle-section__header">
                 <h1 className="mb-0">
                     {vehicle.brand} {vehicle.model}
                 </h1>
 
-                <button
-                    type="button"
-                    className="btn btn-sm btn-secondary"
-                    onClick={() => setShowEdit(true)}
-                >
-                    Modifier
-                </button>
+                <div className="vehicle-actions">
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        Modifier
+                    </button>
 
-                <button
-                    type="button"
-                    className="btn btn-sm btn-danger"
-                    onClick={() => setShowDelete(true)}
-                >
-                    Supprimer
-                </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => setShowDelete(true)}
+                    >
+                        Supprimer
+                    </button>
+                </div>
             </div>
+
             <div className="vehicle-info">
                 <span className="vehicle-info__plate">{vehicle.registrationNumber}</span>
 
@@ -176,16 +174,18 @@ export default function VehiclePage() {
                 </dl>
             </div>
 
-            <section>
-                <div className="d-flex align-items-center gap-2 mb-2">
+            <section className="vehicle-section">
+                <div className="vehicle-section__header">
                     <h2 className="mb-0">Mes derniers contrôles techniques</h2>
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-secondary"
-                        onClick={() => setShowSafetyHistory(true)}
-                    >
-                        Voir tout
-                    </button>
+                    <div className="vehicle-actions">
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => setShowSafetyHistory(true)}
+                        >
+                            Voir tout
+                        </button>
+                    </div>
                 </div>
                 <div className="row g-3">
                     {safetyList.slice(0, 2).map((inspection, index) => (
@@ -196,17 +196,28 @@ export default function VehiclePage() {
                             <CardSafetyInspection
                                 inspection={inspection}
                             >
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-primary"
-                                    onClick={() =>
-                                        setSelectedInspection(inspection)
-                                    }
-                                >
-                                    {index === 0
-                                        ? 'Modifier / Valider'
-                                        : 'Modifier'}
-                                </button>
+                                <div className="vehicle-actions">
+                                    {index === 0 && !inspection.doneAt && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm btn-success"
+                                            onClick={() =>
+                                                setValidatingInspection(inspection)
+                                            }
+                                        >
+                                            Valider
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-secondary"
+                                        onClick={() =>
+                                            setSelectedInspection(inspection)
+                                        }
+                                    >
+                                        Modifier
+                                    </button>
+                                </div>
                             </CardSafetyInspection>
                         </div>
                     ))}
@@ -219,27 +230,29 @@ export default function VehiclePage() {
                 </div>
             </section>
 
-            <section className="mt-4 col-12 col-lg-6">
-                <div className="d-flex align-items-center gap-2 mb-2">
+            <section className="vehicle-section col-12 col-lg-6">
+                <div className="vehicle-section__header">
                     <h2 className="mb-0">
                         Historique des réparations
                     </h2>
 
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-success"
-                        onClick={() => setShowAddRepair(true)}
-                    >
-                        Ajouter
-                    </button>
+                    <div className="vehicle-actions">
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-success"
+                            onClick={() => setShowAddRepair(true)}
+                        >
+                            + Ajouter
+                        </button>
 
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-secondary"
-                        onClick={() => setShowHistory(true)}
-                    >
-                        Voir tout
-                    </button>
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => setShowHistory(true)}
+                        >
+                            Voir tout
+                        </button>
+                    </div>
                 </div>
 
                 {repairsList.length === 0 ? (
@@ -307,9 +320,18 @@ export default function VehiclePage() {
                 <EditSafetyInspection
                     vehicleId={vehicleId}
                     inspection={selectedInspection}
-                    canValidate={canValidate}
                     onClose={() => {
                         setSelectedInspection(null);
+                    }}
+                />
+            )}
+
+            {validatingInspection && (
+                <ValidSafetyInspection
+                    vehicleId={vehicleId}
+                    inspection={validatingInspection}
+                    onClose={() => {
+                        setValidatingInspection(null);
                     }}
                 />
             )}

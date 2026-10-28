@@ -1,5 +1,42 @@
+/* Mise en page générale */
+.vehicle-page {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.vehicle-page__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--color-grey);
+  text-decoration: none;
+}
+
+.vehicle-page__back:hover {
+  color: var(--color-black);
+}
+
+.vehicle-section {
+  margin-bottom: 40px;
+}
+
+/* Titre à gauche, boutons à droite */
+.vehicle-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vehicle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .vehicle-info {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   padding: 20px;
   border: 6px solid var(--color-grey);
   border-radius: 12px;

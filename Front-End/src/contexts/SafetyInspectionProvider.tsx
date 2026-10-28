@@ -12,6 +12,7 @@ interface UpdateSafetyData {
     dueTimeAt?: string;
     doneAt?: string | null;
     type?: string;
+    valid?: boolean;
 }
 
 interface ValidateSafetyData {
@@ -200,13 +201,6 @@ export function SafetyInspectionProvider({ children }: Props) {
                 `${encodeURIComponent(vehicleId)}/` +
                 `${encodeURIComponent(safetyId)}`;
 
-            console.log('Modification du contrôle :', {
-                vehicleId,
-                safetyId,
-                url,
-                data,
-            });
-
             const response = await fetch(url, {
                 method: 'PATCH',
                 credentials: 'include',
@@ -252,13 +246,6 @@ export function SafetyInspectionProvider({ children }: Props) {
                 `${API_URL}/validate/` +
                 `${encodeURIComponent(vehicleId)}/` +
                 `${encodeURIComponent(safetyId)}`;
-
-            console.log('Validation du contrôle :', {
-                vehicleId,
-                safetyId,
-                url,
-                data,
-            });
 
             const response = await fetch(url, {
                 method: 'PATCH',
