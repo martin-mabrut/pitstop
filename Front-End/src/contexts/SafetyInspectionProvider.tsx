@@ -126,7 +126,7 @@ export const SafetyInspectionProvider = ({ children }) => {
     //     }
     // }
 
-    const safetyInspectionYes = async (vehicleId, doneAt) => {
+    const safetyInspectionYes = async (vehicleId, doneAt, valid) => {
 
         try {
             const response = await fetch(
@@ -137,7 +137,7 @@ export const SafetyInspectionProvider = ({ children }) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ doneAt })
+                    body: JSON.stringify({ doneAt, valid })
                 }
             );
             if (response.ok) {

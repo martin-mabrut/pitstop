@@ -71,7 +71,12 @@ export default function VehiclePage() {
             </ul>
 
             <div>
-                <h2>Mes échéances</h2>
+                <div className="d-flex align-items-center gap-2 mb-2">
+                    <h2 className="mb-0">Mes derniers contrôles techniques</h2>
+                    <button type="button" className="btn btn-sm btn-secondary">
+                        Voir tout
+                    </button>
+                </div>
                 <div className="row g-3">
                     {safetyList[0] && (
                         <div className="col-12 col-lg-6">
@@ -113,23 +118,6 @@ export default function VehiclePage() {
                         onClick={function () { setShowHistory(true); }}
                     >
                         Historique des réparations
-                    </button>
-                </div>
-
-                <div className="col-12 col-lg-6">
-                    <h2>Historique des contrôles techniques</h2>
-                    <ul>
-                        {safetyList.slice(0, 3).map(function (ct) {
-                            return (
-                                <li key={ct.id}>
-                                    {formatDate(ct.dueTimeAt)} - {ct.type} : réalisé le {formatDate(ct.doneAt)}
-                                </li>
-                            );
-                        }
-                        )}
-                    </ul>
-                    <button type="button" className="btn btn-sm btn-secondary">
-                        Voir tout
                     </button>
                 </div>
             </div>

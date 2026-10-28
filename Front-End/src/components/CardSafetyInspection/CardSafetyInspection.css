@@ -30,3 +30,21 @@
 .card-safety__light--green {
   background-color: var(--color-green);
 }
+
+/* Échéance à plus de 2 mois : seul le vert reste allumé */
+.card-safety__lights--green .card-safety__light--red,
+.card-safety__lights--green .card-safety__light--yellow {
+  opacity: 0.25;
+}
+
+/* Échéance dépassée : seul le rouge reste allumé */
+.card-safety__lights--red .card-safety__light--yellow,
+.card-safety__lights--red .card-safety__light--green {
+  opacity: 0.25;
+}
+
+/* Échéance dans 2 mois ou moins : seul le jaune reste allumé */
+.card-safety__lights--yellow .card-safety__light--red,
+.card-safety__lights--yellow .card-safety__light--green {
+  opacity: 0.25;
+}

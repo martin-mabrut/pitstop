@@ -17,7 +17,7 @@ export default function AddSafetyWhenVehicleCreated({ vehicle, onClose }: AddSaf
         const form = new FormData(event.currentTarget);
 
         if (isDone) {
-            await safetyInspectionYes(vehicle.id, form.get('doneAt') as string);
+            await safetyInspectionYes(vehicle.id, form.get('doneAt') as string, form.get('valid') === 'yes');
         } else {
             await safetyInspectionNo(vehicle.id);
         }
@@ -52,10 +52,22 @@ export default function AddSafetyWhenVehicleCreated({ vehicle, onClose }: AddSaf
                 </div>
 
                 {isDone && (
-                    <label className="form-label w-100 mt-3">
-                        Date du dernier contrôle
-                        <input type="date" name="doneAt" className="form-control mt-1" required />
-                    </label>
+                    <>
+                        <label className="form-label w-100 mt-3">
+                            Date du dernier contrôle
+                            <input type="date" name="doneAt" className="form-control mt-1" required />
+                        </label>
+
+                        <p className="mt-3 mb-1">Le contrôle était-il favorable ?</p>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="valid" id="valid-yes" value="yes" required />
+                            <label className="form-check-label" htmlFor="valid-yes">Oui</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="valid" id="valid-no" value="no" />
+                            <label className="form-check-label" htmlFor="valid-no">Non (contre-visite)</label>
+                        </div>
+                    </>
                 )}
 
                 <div className="modal-pitstop__actions">
