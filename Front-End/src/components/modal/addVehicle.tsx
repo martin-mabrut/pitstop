@@ -22,6 +22,7 @@ export default function AddVehicle({ onClose }: AddVehicleProps) {
             typeOfTransmission: form.get('typeOfTransmission') as string,
             mileage: Number(form.get('mileage')),
             kmPerDay: Number(form.get('kmPerDay')),
+            
         });
         onClose();
     }

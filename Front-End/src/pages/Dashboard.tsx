@@ -12,7 +12,7 @@ import './Dashboard.css';
 export default function Dashboard() {
     const { vehicles, getVehicle } = useVehicle();
 
-    const { getSafetyInspections, safetyList } = useSafety();
+    const {  getSafetyInspectionsNotDone, safetyList } = useSafety();
 
     const { getUser, user } = useUser();
 
@@ -21,7 +21,7 @@ export default function Dashboard() {
     const [showAddRepair, setShowAddRepair] = useState(false);
 
     useEffect(() => {
-        getVehicle(); getSafetyInspections(); getUser();
+        getVehicle();  getSafetyInspectionsNotDone(); getUser();
     }, []);
 
     return (
