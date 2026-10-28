@@ -86,7 +86,7 @@ final class RepairsController extends AbstractController
     }
 
     #[Route('/api/repairs/update/{vId}/{id}', name: 'api_repairs_update', methods:['PATCH'])]
-    public function update(int $id, int $vId, RepairsRepository $repairsRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em):Response{
+    public function update(int $id, int $vId, RepairsRepository $repairsRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em, ValidatorInterface $validator):Response{
         $user = $this->security->getUser();
         $parameters = json_decode($request->getContent(),true);
         $vehicle = $vehicleRepository->find($vId);
@@ -109,6 +109,10 @@ final class RepairsController extends AbstractController
         if($parameters['repairedAt']!==""){
             $repairedAt = new DateTimeImmutable($parameters['repairedAt']);
             $repairs->setRepairedAt($repairedAt);
+        }
+        $errors = $validator->validate($repairs);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
         }
         $em->persist($repairs);
         $em->flush();

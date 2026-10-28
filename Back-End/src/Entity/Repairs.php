@@ -22,6 +22,10 @@ class Repairs
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'typeOfRepairs must not be null')]
     #[Assert\Choice(choices: Repairs::TYPE_REPAIRS, message: 'Choose a valid type.')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['repairs:read'])]
     private ?string $typeOfRepairs = null;
 
@@ -37,10 +41,18 @@ class Repairs
         minMessage: 'Your first name must be at least {{ limit }} characters long',
         maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
     )]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['repairs:read'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'float',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['repairs:read'])]
     private ?float $price = null;
 
