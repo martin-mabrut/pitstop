@@ -19,9 +19,15 @@ interface RepairsContextType {
     deleteRepair: (vehicleId: string | number, repairId: Repair['id']) => Promise<void>;
 }
 
-const API_URL = 'http://localhost:3000/repairs';
+const API_URL = 'http://localhost:8000/api/repairs';
 
-    const getRepairs = async (vehicleId) => {
+const RepairsContext = createContext<RepairsContextType | null>(null);
+
+export function RepairsProvider({ children }: { children: ReactNode }) {
+
+    const [repairsList, setRepairsList] = useState<Repair[]>([]);
+
+    async function getRepairs(vehicleId: string | number) {
         try {
             const response = await fetch(
                 `${API_URL}/all/${vehicleId}`,
@@ -34,16 +40,13 @@ const API_URL = 'http://localhost:3000/repairs';
                 }
             );
             const result = await response.json();
-            if (result) {
-                setRepairsList(result);
+            if (response.ok) {
+                setRepairsList(result.repairs);
             }
         } catch (error) {
             console.log(error);
         }
-    } catch (error) {
-        console.log(error);
     }
-}
 
     async function addRepair(vehicleId: string | number, data: RepairData) {
         try {
@@ -55,12 +58,11 @@ const API_URL = 'http://localhost:3000/repairs';
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: data
+                    body: JSON.stringify(data)
                 }
             );
-            const result = await response.json();
-            if (result) {
-                setRepairsList(result);
+            if (response.ok) {
+                getRepairs(vehicleId);
             }
         } catch (error) {
             console.log(error);
@@ -77,12 +79,11 @@ const API_URL = 'http://localhost:3000/repairs';
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: data
+                    body: JSON.stringify(data)
                 }
             );
-            const result = await response.json();
-            if (result) {
-                setRepairsList(result);
+            if (response.ok) {
+                getRepairs(vehicleId);
             }
         } catch (error) {
             console.log(error);
@@ -101,9 +102,8 @@ const API_URL = 'http://localhost:3000/repairs';
                     },
                 }
             );
-            const result = await response.json();
-            if (result) {
-                setRepairsList(result);
+            if (response.ok) {
+                getRepairs(vehicleId);
             }
         } catch (error) {
             console.log(error);
