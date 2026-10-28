@@ -52,6 +52,7 @@ export const VehicleProvider = ({ children }) => {
             const result = await response.json();
             if (response.ok) {
                 setVehicle((actual) => [...actual, result]);
+                return result
             }
         } catch (error) {
             console.log(error);
