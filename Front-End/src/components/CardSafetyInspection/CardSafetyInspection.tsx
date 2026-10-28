@@ -1,10 +1,13 @@
 import './CardSafetyInspection.css'
+import type { Vehicle } from '../../contexts/VehicleProvider'
+
 
 export interface SafetyInspection {
   id: string | number
+  dueTimeAt: string
+  doneAt?: string
   type: string
-  dueTime: string
-  isDone?: string
+  vehicule: Vehicle[]
 }
 
 interface CardSafetyInspectionProps {
@@ -30,8 +33,8 @@ function CardSafetyInspection({ inspection }: CardSafetyInspectionProps) {
         <div className="col">
           <h3>Contrôle technique</h3>
           <p>Type : {inspection.type}</p>
-          <p>Échéance : {formatDate(inspection.dueTime)}</p>
-          <p>Réalisé le : {formatDate(inspection.isDone)}</p>
+          <p>Échéance : {formatDate(inspection.dueTimeAt)}</p>
+          <p>Réalisé le : {formatDate(inspection.doneAt)}</p>
         </div>
       </div>
     </div>

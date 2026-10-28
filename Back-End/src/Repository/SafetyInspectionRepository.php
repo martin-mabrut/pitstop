@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SafetyInspection;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,6 +24,45 @@ class SafetyInspectionRepository extends ServiceEntityRepository
         ->where('v.id = :id')
         ->setParameter('id', $id)
         ->orderBy('s.dueTimeAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findLastTwo(int $limit, int $id):array
+    {
+        return $this->createQueryBuilder('s')
+        ->orderBy('s.dueTimeAt', 'DESC')
+        ->join('s.vehicle', 'v')
+        ->where('v.id = :id')
+        ->setParameter('id', $id)
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findLastNotDone(int $id):array
+    {
+        return $this->createQueryBuilder('s')
+        ->orderBy('s.dueTimeAt', 'DESC')
+        ->join('s.vehicle', 'v')
+        ->andwhere('v.id = :id')
+        ->setParameter('id', $id)
+        ->andwhere('s.doneAt is NULL')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findAllNotDoneFromAllVehicle(User $user):array
+    {
+        return $this->createQueryBuilder('s')
+        ->join('s.vehicle', 'v')
+        ->join('v.user', 'u')
+        ->where('s.doneAt is NULL')
+        ->andWhere('u = :user')
+        ->setParameter('user', $user)
+        ->orderBy('s.dueTimeAt', 'ASC')
+        ->setMaxResults(5)
         ->getQuery()
         ->getResult();
     }

@@ -16,6 +16,17 @@ class RepairsRepository extends ServiceEntityRepository
         parent::__construct($registry, Repairs::class);
     }
 
+    public function findAllFromAVehicle(int $id): array
+    {
+        return $this->createQueryBuilder('r')
+        ->join('r.vehicle', 'v')
+        ->where('v.id = :id')
+        ->setParameter('id', $id)
+        ->orderBy('r.repairedAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+    }
+
 //    /**
 //     * @return Repairs[] Returns an array of Repairs objects
 //     */

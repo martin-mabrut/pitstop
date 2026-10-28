@@ -21,22 +21,24 @@ interface RepairsContextType {
 
 const API_URL = 'http://localhost:3000/repairs';
 
-const RepairsContext = createContext<RepairsContextType | null>(null);
-
-export function RepairsProvider({ children }: { children: ReactNode }) {
-
-    const [repairsList, setRepairsList] = useState<Repair[]>([]);
-
-    async function getRepairs(vehicleId: string | number) {
-    try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        if (Array.isArray(result)) {
-            setRepairsList(result.filter(function (r) {
-                return String(r.vehicleId) === String(vehicleId);
-            }));
-        } else {
-            setRepairsList([]);
+    const getRepairs = async (vehicleId) => {
+        try {
+            const response = await fetch(
+                `${API_URL}/all/${vehicleId}`,
+                {
+                    credentials: "include",
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+            const result = await response.json();
+            if (result) {
+                setRepairsList(result);
+            }
+        } catch (error) {
+            console.log(error);
         }
     } catch (error) {
         console.log(error);
@@ -45,15 +47,20 @@ export function RepairsProvider({ children }: { children: ReactNode }) {
 
     async function addRepair(vehicleId: string | number, data: RepairData) {
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...data, vehicleId: vehicleId }),
-            });
-            if (response.ok) {
-                await getRepairs(vehicleId);
-            } else {
-                console.log('Erreur ajout réparation :', response.status);
+            const response = await fetch(
+                `${API_URL}/add/${vehicleId}`,
+                {
+                    credentials: "include",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: data
+                }
+            );
+            const result = await response.json();
+            if (result) {
+                setRepairsList(result);
             }
         } catch (error) {
             console.log(error);
@@ -62,15 +69,20 @@ export function RepairsProvider({ children }: { children: ReactNode }) {
 
     async function modifyRepair(vehicleId: string | number, repairId: Repair['id'], data: Partial<RepairData>) {
         try {
-            const response = await fetch(`${API_URL}/${repairId}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (response.ok) {
-                await getRepairs(vehicleId);
-            } else {
-                console.log('Erreur modification réparation :', response.status);
+            const response = await fetch(
+                `${API_URL}/update/${vehicleId}/${repairId}`,
+                {
+                    credentials: "include",
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: data
+                }
+            );
+            const result = await response.json();
+            if (result) {
+                setRepairsList(result);
             }
         } catch (error) {
             console.log(error);
@@ -79,13 +91,19 @@ export function RepairsProvider({ children }: { children: ReactNode }) {
 
     async function deleteRepair(vehicleId: string | number, repairId: Repair['id']) {
         try {
-            const response = await fetch(`${API_URL}/${repairId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                await getRepairs(vehicleId);
-            } else {
-                console.log('Erreur suppression réparation :', response.status);
+            const response = await fetch(
+                `${API_URL}/delete/${vehicleId}/${repairId}`,
+                {
+                    credentials: "include",
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            const result = await response.json();
+            if (result) {
+                setRepairsList(result);
             }
         } catch (error) {
             console.log(error);
