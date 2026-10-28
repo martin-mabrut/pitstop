@@ -6,11 +6,13 @@ use App\Repository\RepairsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: RepairsRepository::class)]
 class Repairs
 {
+    public const TYPE_REPAIRS = ['Carrosserie', 'Vitre', 'Autre'];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,14 +20,23 @@ class Repairs
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'typeOfRepairs must not be null')]
+    #[Assert\Choice(choices: Repairs::TYPE_REPAIRS, message: 'Choose a valid type.')]
     #[Groups(['repairs:read'])]
     private ?string $typeOfRepairs = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\DateTime]
     #[Groups(['repairs:read'])]
     private ?\DateTimeImmutable $repairedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(
+        min: 0,
+        max: 200,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
     #[Groups(['repairs:read'])]
     private ?string $description = null;
 
@@ -34,6 +45,7 @@ class Repairs
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'repairs')]
+    #[Assert\NotBlank(message: 'the repairs must be linked to a vehicle')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicle $vehicle = null;
 

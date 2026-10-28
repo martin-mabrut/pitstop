@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class RepairsController extends AbstractController
 {
@@ -52,7 +53,7 @@ final class RepairsController extends AbstractController
     }
 
     #[Route('/api/repairs/add/{vId}', name: 'api_repairs_add', methods:['POST'])]
-    public function add(int $vId, Request $request, EntityManagerInterface $em, VehicleRepository $vehicleRepository):Response
+    public function add(int $vId, Request $request, EntityManagerInterface $em, VehicleRepository $vehicleRepository, ValidatorInterface $validator):Response
     {
         $user = $this->security->getUser();
         $parameters = json_decode($request->getContent(),true);
@@ -75,6 +76,10 @@ final class RepairsController extends AbstractController
             $repairs->setRepairedAt($repairedAt);
         }
         $repairs->setVehicle($vehicle);
+        $errors = $validator->validate($repairs);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
+        }
         $em->persist($repairs);
         $em->flush();
         return new Response();

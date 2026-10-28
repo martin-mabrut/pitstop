@@ -71,8 +71,21 @@ final class SafetyInspectionController extends AbstractController
         $safetyInspection->setDoneAt($doneAt);
         $safetyInspection->setType($type);
         $safetyInspection->setVehicle($vehicle);
-
+        $safetyInspectionNext = new SafetyInspection();
+        if($parameters['valid']){
+            $dueTimeNext = new DateTime($parameters['doneAt']);
+            $dueTimeNext->modify('+2 year');
+            $typeNext = "regular";
+        }else{
+            $dueTimeNext = new DateTime($parameters['doneAt']);
+            $dueTimeNext->modify('+2 month');
+            $typeNext = "followUp";
+        }
+        $safetyInspectionNext->setDueTimeAt($dueTimeNext);
+        $safetyInspectionNext->setType($typeNext);
+        $safetyInspectionNext->setVehicle($vehicle);
         $em->persist($safetyInspection);
+        $em->persist($safetyInspectionNext);
         $em->flush();
         return new Response();
     }
