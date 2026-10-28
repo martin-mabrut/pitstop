@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Vehicle;
 use App\Repository\VehicleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,27 +10,26 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\SecurityBundle\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTimeImmutable;
+use Symfony\Component\HttpFoundation\Request;
 
 final class VehicleController extends AbstractController
 {
-    public function __construct(private Security $security)
-    {
-    }
-     #[Route('/vehicle/{id}', name: 'api_vehicle', methods:['GET'])]
+    public function __construct(private Security $security) {}
+    #[Route('api/vehicle/all/{id}', name: 'api_vehicle', methods: ['GET'])]
     public function index(int $id, VehicleRepository $vehicleRepository): Response
     {
-        $user = $this->security->getUser(); 
+        $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
-        if($vehicle === null){
+        if ($vehicle === null) {
             return new Response("Vehicle not found", 404);
         }
-        if($vehicle->getUser() != $user){
+        if ($vehicle->getUser() != $user) {
             return new Response("Invalid credentials", 403);
         }
-        return $this->json(['vehicle'=>$vehicle],200,[],['groups'=>['safety:read']]);
+        return $this->json(['vehicle' => $vehicle], 200, [], ['groups' => ['safety:read']]);
     }
 
-     #[Route('/api/vehicle/add/', name: 'api_vehicle_add', methods: ['POST'])]
+    #[Route('/api/vehicle/add/', name: 'api_vehicle_add', methods: ['POST'])]
     public function addDone(Request $request, EntityManagerInterface $em): Response
     {
         $user = $this->security->getUser();
@@ -45,20 +45,20 @@ final class VehicleController extends AbstractController
         $vehicle->setRegistrationNumber($parameters['registrationNumber']);
         $vehicle->setBrand($parameters['brand']);
         $vehicle->setModel($parameters['model']);
-        if($parameters['version']!==""){
+        if ($parameters['version'] !== "") {
             $vehicle->setVersion($parameters['version']);
         }
         $vehicle->setFirstRegistrationDateAt(new \DateTimeImmutable($parameters['firstRegistrationDateAt']));
         $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
         $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
-        if($parameters['mileage']!==""){
+        if ($parameters['mileage'] !== "") {
             $vehicle->setMileage($parameters['mileage']);
         }
 
-        if($parameters['kmPerDay']!==""){
+        if ($parameters['kmPerDay'] !== "") {
             $vehicle->setKmPerDay($parameters['kmPerDay']);
         }
-        
+
         $em->persist($vehicle);
         $em->flush();
 
@@ -124,11 +124,11 @@ final class VehicleController extends AbstractController
     }
 
     #[Route('/api/vehicle/delete/{id}', name: 'api_vehicle_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    public function delete(int $id, VehicleRepository $vehicleRepository, EntityManagerInterface $em): Response 
+    public function delete(int $id, VehicleRepository $vehicleRepository, EntityManagerInterface $em): Response
     {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
-        
+
         if ($vehicle === null) {
             return new Response('Vehicle not found', 404);
         }

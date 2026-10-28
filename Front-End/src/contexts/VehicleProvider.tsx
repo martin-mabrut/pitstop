@@ -19,7 +19,7 @@ interface VehicleContextType {
     deleteVehicle: (id: Vehicle['id']) => Promise<void>;
 }
 
-const API_URL = 'http://localhost:3000/vehicles';
+const API_URL = 'http://localhost:8000/api/vehicle';
 
 const VehicleContext = createContext<VehicleContextType | null>(null);
 
@@ -31,7 +31,7 @@ export const VehicleProvider = ({ children }) => {
 
         try {
             const response = await fetch(
-                API_URL);
+                `${API_URL}/all`);
 
             const result = await response.json();
             if (result) {
@@ -44,7 +44,7 @@ export const VehicleProvider = ({ children }) => {
 
     const addVehicle = async (data: Omit<Vehicle, 'id'>) => {
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(`${API_URL}/add/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -61,7 +61,7 @@ export const VehicleProvider = ({ children }) => {
 
     const updateVehicle = async (id: Vehicle['id'], data: Partial<Omit<Vehicle, 'id'>>) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
+            const response = await fetch(`${API_URL}/update/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -77,7 +77,7 @@ export const VehicleProvider = ({ children }) => {
 
     const deleteVehicle = async (id: Vehicle['id']) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
+            const response = await fetch(`${API_URL}/delete/${id}`, {
                 method: 'DELETE',
             });
             if (response.ok) {
