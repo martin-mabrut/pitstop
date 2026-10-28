@@ -16,12 +16,10 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
-      if (result) {
-        console.log(result);
-      }
+      return response.ok;
     } catch (error) {
       console.log(error);
+      return false;
     }
   };
 
