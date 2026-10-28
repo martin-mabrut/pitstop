@@ -1,26 +1,91 @@
-import { useContext, createContext } from 'react';
-import { useState } from 'react';
+import { useContext, createContext, useState, type ReactNode } from 'react';
 
-const RepairsContext = createContext(null);
+export interface Repair {
+    id: string | number;
+    vehicleId: string | number;
+    typeOfRepairs: string;
+    repairDate: string;
+    description: string;
+    price: number;
+}
 
-export const RepairsProvider = ({ children }) => {
+type RepairData = Omit<Repair, 'id' | 'vehicleId'>;
 
-    const [repairsList, setRepairsList] = useState([]);
+interface RepairsContextType {
+    repairsList: Repair[];
+    getRepairs: (vehicleId: string | number) => Promise<void>;
+    addRepair: (vehicleId: string | number, data: RepairData) => Promise<void>;
+    modifyRepair: (vehicleId: string | number, repairId: Repair['id'], data: Partial<RepairData>) => Promise<void>;
+    deleteRepair: (vehicleId: string | number, repairId: Repair['id']) => Promise<void>;
+}
 
-    const getRepairs = async () => {
+const API_URL = 'http://localhost:3000/repairs';
+
+const RepairsContext = createContext<RepairsContextType | null>(null);
+
+export function RepairsProvider({ children }: { children: ReactNode }) {
+
+    const [repairsList, setRepairsList] = useState<Repair[]>([]);
+
+    async function getRepairs(vehicleId: string | number) {
+    try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        if (Array.isArray(result)) {
+            setRepairsList(result.filter(function (r) {
+                return String(r.vehicleId) === String(vehicleId);
+            }));
+        } else {
+            setRepairsList([]);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+    async function addRepair(vehicleId: string | number, data: RepairData) {
         try {
-            const response = await fetch(
-                `http://localhost:3000/repairs`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            );
-            const result = await response.json();
-            if (result) {
-                setRepairsList(result);
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...data, vehicleId: vehicleId }),
+            });
+            if (response.ok) {
+                await getRepairs(vehicleId);
+            } else {
+                console.log('Erreur ajout réparation :', response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function modifyRepair(vehicleId: string | number, repairId: Repair['id'], data: Partial<RepairData>) {
+        try {
+            const response = await fetch(`${API_URL}/${repairId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                await getRepairs(vehicleId);
+            } else {
+                console.log('Erreur modification réparation :', response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function deleteRepair(vehicleId: string | number, repairId: Repair['id']) {
+        try {
+            const response = await fetch(`${API_URL}/${repairId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                await getRepairs(vehicleId);
+            } else {
+                console.log('Erreur suppression réparation :', response.status);
             }
         } catch (error) {
             console.log(error);
@@ -28,12 +93,18 @@ export const RepairsProvider = ({ children }) => {
     }
 
     return (
-        <RepairsContext.Provider value={{ getRepairs, repairsList }}>
+        <RepairsContext.Provider
+            value={{ repairsList, getRepairs, addRepair, modifyRepair, deleteRepair }}
+        >
             {children}
         </RepairsContext.Provider>
     );
 }
 
-export const useRepairs = () => {
-    return useContext(RepairsContext);
+export function useRepairs() {
+    const context = useContext(RepairsContext);
+    if (!context) {
+        throw new Error('useRepairs doit être utilisé dans un RepairsProvider');
+    }
+    return context;
 }
