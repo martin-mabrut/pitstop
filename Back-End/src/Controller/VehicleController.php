@@ -15,7 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
 final class VehicleController extends AbstractController
 {
     public function __construct(private Security $security) {}
-    #[Route('api/vehicle/all/{id}', name: 'api_vehicle', methods: ['GET'])]
+    #[Route('/api/vehicle/all', name: 'api_vehicle_all', methods: ['GET'])]
+    public function findAll(VehicleRepository $vehicleRepository): Response
+    {
+        $user = $this->security->getUser();
+        $vehicleList = $vehicleRepository->findBy(["user" => $user]);
+        return $this->json(['vehicles' => $vehicleList], 200, [], ['groups' => ['safety:read']]);
+    }
+
+    #[Route('/api/vehicle/one/{id}', name: 'api_vehicle_one', methods: ['GET'])]
     public function index(int $id, VehicleRepository $vehicleRepository): Response
     {
         $user = $this->security->getUser();
@@ -48,7 +56,7 @@ final class VehicleController extends AbstractController
         if ($parameters['version'] !== "") {
             $vehicle->setVersion($parameters['version']);
         }
-        $vehicle->setFirstRegistrationDateAt(new \DateTimeImmutable($parameters['firstRegistrationDateAt']));
+        $vehicle->setFirstRegistrationDateAt(new DateTimeImmutable($parameters['firstRegistrationDateAt']));
         $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
         $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
         if ($parameters['mileage'] !== "") {
@@ -83,38 +91,38 @@ final class VehicleController extends AbstractController
             return new Response('Invalid JSON', 400);
         }
 
-        if (isset($parameters['vehicleType'])) {
+        if ($parameters['vehicleType'] !== "") {
             $vehicle->setVehicleType($parameters['vehicleType']);
         }
-        if (isset($parameters['registrationNumber'])) {
+        if ($parameters['registrationNumber'] !== "") {
             $vehicle->setRegistrationNumber($parameters['registrationNumber']);
         }
-        if (isset($parameters['brand'])) {
+        if ($parameters['brand'] !== "") {
             $vehicle->setBrand($parameters['brand']);
         }
-        if (isset($parameters['model'])) {
+        if ($parameters['model'] !== "") {
             $vehicle->setModel($parameters['model']);
         }
-        if (isset($parameters['version'])) {
+        if ($parameters['version'] !== "") {
             $vehicle->setVersion($parameters['version']);
         }
-        if (isset($parameters['firstRegistrationDateAt'])) {
+        if ($parameters['firstRegistrationDateAt'] !== "") {
             try {
-                $vehicle->setFirstRegistrationDateAt(new \DateTimeImmutable($parameters['firstRegistrationDateAt']));
+                $vehicle->setFirstRegistrationDateAt(new DateTimeImmutable($parameters['firstRegistrationDateAt']));
             } catch (\Exception) {
                 return new Response('Invalid firstRegistrationDateAt', 400);
             }
         }
-        if (isset($parameters['typeOfFuel'])) {
+        if ($parameters['typeOfFuel'] !== "") {
             $vehicle->setTypeOfFuel($parameters['typeOfFuel']);
         }
-        if (isset($parameters['typeOfTransmission'])) {
+        if ($parameters['typeOfTransmission'] !== "") {
             $vehicle->setTypeOfTransmission($parameters['typeOfTransmission']);
         }
-        if (isset($parameters['mileage'])) {
+        if ($parameters['mileage'] !== 0) {
             $vehicle->setMileage($parameters['mileage']);
         }
-        if (isset($parameters['kmPerDay'])) {
+        if ($parameters['kmPerDay'] !== 0) {
             $vehicle->setKmPerDay($parameters['kmPerDay']);
         }
         $em->persist($vehicle);
