@@ -5,11 +5,13 @@ namespace App\Entity;
 use App\Repository\SafetyInspectionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: SafetyInspectionRepository::class)]
 class SafetyInspection
 {
+    public const TYPE_SAFETYINSPECTION = ['regular', 'followUp'];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -17,14 +19,22 @@ class SafetyInspection
     private ?int $id = null;
 
     #[ORM\Column]
+    // #[Assert\DateTime]
+    #[Assert\NotBlank(message: 'dueTimeAt must not be null')]
     #[Groups(['safety:read'])]
     private ?\DateTime $dueTimeAt = null;
 
     #[ORM\Column(nullable: true)]
+    // #[Assert\DateTime]
     #[Groups(['safety:read'])]
     private ?\DateTime $doneAt = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Choice(choices: SafetyInspection::TYPE_SAFETYINSPECTION, message: 'Choose a valid type.')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     #[Groups(['safety:read'])]
     private ?string $type = null;
 
