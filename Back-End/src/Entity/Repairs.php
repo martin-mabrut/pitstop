@@ -30,7 +30,6 @@ class Repairs
     private ?string $typeOfRepairs = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\DateTime]
     #[Groups(['repairs:read'])]
     private ?\DateTimeImmutable $repairedAt = null;
 

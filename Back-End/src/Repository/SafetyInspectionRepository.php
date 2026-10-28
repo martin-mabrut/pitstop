@@ -28,20 +28,26 @@ class SafetyInspectionRepository extends ServiceEntityRepository
         ->getResult();
     }
 
-    public function findLastTwo(int $limit):array
+    public function findLastTwo(int $limit, int $id):array
     {
         return $this->createQueryBuilder('s')
         ->orderBy('s.dueTimeAt', 'DESC')
+        ->join('s.vehicle', 'v')
+        ->where('v.id = :id')
+        ->setParameter('id', $id)
         ->setMaxResults($limit)
         ->getQuery()
         ->getResult();
     }
 
-    public function findLastNotDone():array
+    public function findLastNotDone(int $id):array
     {
         return $this->createQueryBuilder('s')
         ->orderBy('s.dueTimeAt', 'DESC')
-        ->where('s.doneAt is NULL')
+        ->join('s.vehicle', 'v')
+        ->andwhere('v.id = :id')
+        ->setParameter('id', $id)
+        ->andwhere('s.doneAt is NULL')
         ->setMaxResults(1)
         ->getQuery()
         ->getResult();

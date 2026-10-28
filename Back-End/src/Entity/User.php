@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,6 +22,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "email must not be null")]
+    #[Assert\Email(message: "must be an email")]
     private ?string $email = null;
 
     /**
@@ -33,12 +36,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
     private ?string $password = null;
 
     #[ORM\Column(length: 180)]
     private ?string $uuid = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Type(
+        type: 'string',
+        message: 'The value {{ value }} is not a valid {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $username = null;
 
     #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'user')]

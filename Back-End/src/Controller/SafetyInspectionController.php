@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 final class SafetyInspectionController extends AbstractController
 {
@@ -53,7 +55,7 @@ final class SafetyInspectionController extends AbstractController
     }
 
     #[Route('/api/safetyInspection/addDone/{id}', name: 'api_safety_inspection_add', methods:['POST'])]
-    public function addDone(int $id, Request $request, EntityManagerInterface $em, VehicleRepository $vehicleRepository): Response
+    public function addDone(int $id, Request $request, EntityManagerInterface $em, VehicleRepository $vehicleRepository, ValidatorInterface $validator): Response
     {
         $user = $this->security->getUser();
         $parameters = json_decode($request->getContent(),true);
@@ -87,12 +89,20 @@ final class SafetyInspectionController extends AbstractController
         $safetyInspectionNext->setVehicle($vehicle);
         $em->persist($safetyInspection);
         $em->persist($safetyInspectionNext);
+        $errors = $validator->validate($safetyInspection);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
+        }
+        $errorsNext = $validator->validate($safetyInspectionNext);
+        if(count($errorsNext)>0){
+            return new Response((string) $errorsNext, 400);
+        }
         $em->flush();
         return new Response();
     }
 
     #[Route('/api/safetyInspection/addFirst/{id}', name: 'api_safety_inspection_add_first', methods:['POST'])]
-    public function addFirst(int $id, EntityManagerInterface $em, VehicleRepository $vehicleRepository):Response
+    public function addFirst(int $id, EntityManagerInterface $em, VehicleRepository $vehicleRepository, ValidatorInterface $validator):Response
     {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($id);
@@ -117,13 +127,17 @@ final class SafetyInspectionController extends AbstractController
         $safetyInspection->setDueTimeAt($dueTimeAt);
         $safetyInspection->setType($type);
         $safetyInspection->setVehicle($vehicle);
+        $errors = $validator->validate($safetyInspection);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
+        }
         $em->persist($safetyInspection);
         $em->flush();
         return new Response();
     }
 
     #[Route('/api/safetyInspection/update/{vId}/{id}', name: 'api_safety_inspection_update', methods:['PATCH'])]
-    public function update(int $id, int $vId, SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em): Response
+    public function update(int $id, int $vId, SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($vId);
@@ -138,7 +152,7 @@ final class SafetyInspectionController extends AbstractController
         if($safetyInspection->getVehicle()!== $vehicle){
             return new Response("Invalid credentials", 403);
         }
-        $safetyInspectionLastTwo = $safetyInspectionRepository->findLastTwo(2);
+        $safetyInspectionLastTwo = $safetyInspectionRepository->findLastTwo(2, $vId);
         if(!in_array($safetyInspection, $safetyInspectionLastTwo))
             {
                 return new Response("You cannot modify this Safety Inspection", 403);
@@ -168,14 +182,22 @@ final class SafetyInspectionController extends AbstractController
                 $safetyInspectionNext->setDueTimeAt($dueTimeNext);
                 $safetyInspectionNext->setType($typeNext);
                 $em->persist($safetyInspectionNext);
+                $errorsNext = $validator->validate($safetyInspectionNext);
+                if(count($errorsNext)>0){
+                    return new Response((string) $errorsNext, 400);
+                }
             }
+        $errors = $validator->validate($safetyInspection);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
+        }
         $em->persist($safetyInspection);
         $em->flush();
         return $this->json(['safetyInspection'=>$safetyInspection],200,[],['groups'=>['safety:read']]);
     }
 
     #[Route('/api/safetyInspection/validate/{vId}/{id}', name: 'api_safety_inspection_validate', methods:['PATCH'])]
-    public function validate(int $id, int $vId, SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em): Response
+    public function validate(int $id, int $vId, SafetyInspectionRepository $safetyInspectionRepository, VehicleRepository $vehicleRepository, Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         $user = $this->security->getUser();
         $vehicle = $vehicleRepository->find($vId);
@@ -190,7 +212,7 @@ final class SafetyInspectionController extends AbstractController
         if($safetyInspection->getVehicle()!== $vehicle){
             return new Response("Invalid credentials", 403);
         }
-        $safetyInspectionLast = $safetyInspectionRepository->findLastNotDone();
+        $safetyInspectionLast = $safetyInspectionRepository->findLastNotDone($vId);
         if($safetyInspection !== $safetyInspectionLast[0]){
             return new Response("You cannot validate this Safety Inspection", 403);
         }
@@ -209,6 +231,14 @@ final class SafetyInspectionController extends AbstractController
                 }
         $safetyInspectionNext->setDueTimeAt($dueTimeNext);
         $safetyInspectionNext->setType($typeNext);
+        $errors = $validator->validate($safetyInspection);
+        if(count($errors)>0){
+            return new Response((string) $errors, 400);
+        }
+        $errorsNext = $validator->validate($safetyInspectionNext);
+        if(count($errorsNext)>0){
+            return new Response((string) $errorsNext, 400);
+        }
         $em->persist($safetyInspectionNext);
         $em->persist($safetyInspection);
         $em->flush();
