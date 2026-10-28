@@ -1,0 +1,32 @@
+.card-safety {
+  height: 100%;
+  padding: 16px;
+  border: 6px solid var(--color-grey);
+  border-radius: 12px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.card-safety__lights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-safety__light {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.card-safety__light--red {
+  background-color: var(--color-red);
+}
+
+.card-safety__light--yellow {
+  background-color: var(--color-yellow);
+}
+
+.card-safety__light--green {
+  background-color: var(--color-green);
+}

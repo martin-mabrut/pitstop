@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import './modal.css';
 
 interface ModalProps {
     title: string;
@@ -8,28 +9,12 @@ interface ModalProps {
 
 export default function Modal({ title, onClose, children }: ModalProps) {
     return (
-        <div
-            onClick={onClose}
-            style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
+        <div className="modal-pitstop" onClick={onClose}>
             <div
+                className="modal-pitstop__box"
                 onClick={function (e) { e.stopPropagation(); }}
-                style={{
-                    background: 'white',
-                    color: 'black',
-                    padding: '1.5rem',
-                    borderRadius: '8px',
-                    minWidth: '300px',
-                }}
             >
-                <h2>{title}</h2>
+                <h2 className="modal-pitstop__title">{title}</h2>
                 {children}
             </div>
         </div>

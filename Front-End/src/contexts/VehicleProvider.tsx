@@ -5,6 +5,10 @@ export interface Vehicle {
     id: string | number;
     brand: string;
     model: string;
+    registrationNumber?: string;
+    version?: string;
+    typeOfFuel?: string;
+    mileage?: number;
 }
 
 interface VehicleContextType {
