@@ -5,12 +5,14 @@ const SafetyInspectionContext = createContext(null);
 
 export const SafetyInspectionProvider = ({ children }) => {
 
+    const API_URL = 'http://localhost:3000/safetyInspection';
+
     const [safetyList, setSafetyList] = useState([]);
 
-    const getSafetyInspections = async () => {
+    const getSafetyInspections = async (vehicleId) => {
         try {
             const response = await fetch(
-                'http://localhost:3000/safetyInspection/',
+                `${API_URL}/${vehicleId}`,
                 {
                     // credentials: 'include',
                     method: "Get",
@@ -32,10 +34,35 @@ export const SafetyInspectionProvider = ({ children }) => {
 
     }
 
-    const updateSafetyInspections = async (data, id) => {
+    const getSafetyInspectionsNotDone = async () => {
         try {
             const response = await fetch(
-                `http://localhost:3000/safetyInspection/${id}`,
+                `${API_URL}`,
+                {
+                    // credentials: 'include',
+                    method: "Get",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+            const safetyInspectionList = await response.json();
+            if (safetyInspectionList) {
+
+                // const itemsToKeep = [safetyInspectionList[0], safetyInspectionList[1]];
+
+                setSafetyList(safetyInspectionList);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const updateSafetyInspections = async (vehicleId, safetyId, data) => {
+        try {
+            const response = await fetch(
+                `${API_URL}/${vehicleId}/${safetyId}`,
                 {
                     // credentials: 'include',
                     method: "PATCH",
@@ -59,10 +86,10 @@ export const SafetyInspectionProvider = ({ children }) => {
         }
     }
 
-    const deleteSafetyInspections = async (id) => {
+    const deleteSafetyInspections = async (vehicleId, safetyId, data) => {
         try {
             const response = await fetch(
-                `http://localhost:3000/safetyInspection/${id}`,
+                `${API_URL}/${vehicleId}/${safetyId}`,
                 {
                     // credentials: 'include',
                     method: "DELETE",
