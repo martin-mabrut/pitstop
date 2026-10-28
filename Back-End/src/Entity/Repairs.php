@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\RepairsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+
 
 #[ORM\Entity(repositoryClass: RepairsRepository::class)]
 class Repairs
@@ -12,18 +14,23 @@ class Repairs
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['repairs:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['repairs:read'])]
     private ?string $typeOfRepairs = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['repairs:read'])]
     private ?\DateTimeImmutable $repairedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['repairs:read'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['repairs:read'])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'repairs')]

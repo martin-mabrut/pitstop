@@ -44,8 +44,11 @@ final class SafetyInspectionController extends AbstractController
         if($vehicle->getUser() != $user){
             return new Response("Invalid credentials", 403);
         }
-        $safetyInspections = $safetyInspectionRepository->find($id);
-        return $this->json(['safetyInspections'=>$safetyInspections],200,[],['groups'=>['safety:read']]);
+        $safetyInspection = $safetyInspectionRepository->find($id);
+        if($safetyInspection->getVehicle()!== $vehicle){
+            return new Response("Invalid credentials", 403);
+        }
+        return $this->json(['safetyInspections'=>$safetyInspection],200,[],['groups'=>['safety:read']]);
     }
 
     #[Route('/api/safetyInspection/addDone/{id}', name: 'api_safety_inspection_add', methods:['POST'])]
@@ -87,6 +90,9 @@ final class SafetyInspectionController extends AbstractController
             return new Response("Invalid credentials", 403);
         }
         $safetyInspection = $safetyInspectionRepository->find($id);
+        if($safetyInspection->getVehicle()!== $vehicle){
+            return new Response("Invalid credentials", 403);
+        }
         $safetyInspectionLastTwo = $safetyInspectionRepository->findLastTwo(2);
         if(!in_array($safetyInspection, $safetyInspectionLastTwo))
             {
@@ -136,6 +142,9 @@ final class SafetyInspectionController extends AbstractController
             return new Response("Invalid credentials", 403);
         }
         $safetyInspection = $safetyInspectionRepository->find($id);
+        if($safetyInspection->getVehicle()!== $vehicle){
+            return new Response("Invalid credentials", 403);
+        }
         $safetyInspectionLast = $safetyInspectionRepository->findLastNotDone();
         if($safetyInspection !== $safetyInspectionLast[0]){
             return new Response("You cannot validate this Safety Inspection", 403);

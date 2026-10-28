@@ -13,6 +13,7 @@ class SafetyInspection
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['safety:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
