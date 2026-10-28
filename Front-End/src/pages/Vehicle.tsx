@@ -9,6 +9,7 @@ import EditVehicle from '../components/modal/editVehicle';
 import DeleteVehicle from '../components/modal/deleteVehicle';
 import AddRepair from '../components/modal/addRepairs';
 import RepairHistory from '../components/modal/repairHistory';
+import SafetyHistory from '../components/modal/safetyHistory';
 
 function formatDate(date?: string) {
     return date ? new Date(date).toLocaleDateString('fr-FR') : '-';
@@ -25,6 +26,7 @@ export default function VehiclePage() {
     const [showDelete, setShowDelete] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [showAddRepair, setShowAddRepair] = useState(false);
+    const [showSafetyHistory, setShowSafetyHistory] = useState(false);
 
     useEffect(function () {
         getVehicle();
@@ -113,7 +115,11 @@ export default function VehiclePage() {
                             </li>
                         ))}
                     </ul>
-                    <button type="button" className="btn btn-sm btn-secondary">
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-secondary"
+                        onClick={function () { setShowSafetyHistory(true); }}
+                    >
                         Voir tout
                     </button>
                 </div>
@@ -139,6 +145,13 @@ export default function VehiclePage() {
                     vehicleId={uuid}
                     repairs={repairsList}
                     onClose={function () { setShowHistory(false); }}
+                />
+            )}
+
+            {showSafetyHistory && (
+                <SafetyHistory
+                    inspections={safetyList}
+                    onClose={function () { setShowSafetyHistory(false); }}
                 />
             )}
         </div>
