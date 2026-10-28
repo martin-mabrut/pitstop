@@ -8,14 +8,16 @@ export default function Signin() {
     const { signin } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event?.preventDefault();
         const username = event?.target?.username.value;
         const email = event?.target?.email?.value;
         const password = event?.target?.password?.value;
-        signin({ username, password, email });
+        const success = await signin({ username, password, email });
 
-        navigate("/login");
+        if (success) {
+            navigate("/login");
+        }
     }
     return (
         <div className="container auth-page">
