@@ -12,6 +12,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 final class SafetyInspectionController extends AbstractController
 {
@@ -86,6 +87,37 @@ final class SafetyInspectionController extends AbstractController
         $safetyInspectionNext->setVehicle($vehicle);
         $em->persist($safetyInspection);
         $em->persist($safetyInspectionNext);
+        $em->flush();
+        return new Response();
+    }
+
+    #[Route('/api/safetyInspection/addFirst/{id}', name: 'api_safety_inspection_add_first', methods:['POST'])]
+    public function addFirst(int $id, EntityManagerInterface $em, VehicleRepository $vehicleRepository):Response
+    {
+        $user = $this->security->getUser();
+        $vehicle = $vehicleRepository->find($id);
+        if($vehicle === null){
+            return new Response("Vehicle not found", 404);
+        }
+        if($vehicle->getUser() != $user){
+            return new Response("Invalid credentials", 403);
+        }
+        $today4yearsAgo = new DateTime("");
+        $today4yearsAgo->modify("- 4 year");
+        $safetyInspection = new SafetyInspection();
+        $type = "regular";
+        if($vehicle->getFirstRegistrationDateAt()<=$today4yearsAgo)
+        {
+            $dueTimeAt = new DateTime("");
+            $dueTimeAt->modify("+ 1 week");
+        }else{
+            $dueTimeAt = new DateTime($vehicle->getFirstRegistrationDateAt()->format(DateTime::ATOM));
+            $dueTimeAt->modify("+ 4 year");
+        }
+        $safetyInspection->setDueTimeAt($dueTimeAt);
+        $safetyInspection->setType($type);
+        $safetyInspection->setVehicle($vehicle);
+        $em->persist($safetyInspection);
         $em->flush();
         return new Response();
     }
