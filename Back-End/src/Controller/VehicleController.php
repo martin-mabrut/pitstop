@@ -23,7 +23,7 @@ final class VehicleController extends AbstractController
     {
         $user = $this->security->getUser(); 
         $vehicleList = $vehicleRepository->findBy(["user"=>$user]);
-        return $this->json(['vehicles'=>$vehicleList],200,[],['groups'=>['safety:read']]);
+        return $this->json(['vehicles'=>$vehicleList],200,[],['groups'=>['vehicle:read']]);
     }
 
     #[Route('/api/vehicle/one/{id}', name: 'api_vehicle_one', methods:['GET'])]
@@ -37,7 +37,7 @@ final class VehicleController extends AbstractController
         if($vehicle->getUser() != $user){
             return new Response("Invalid credentials", 403);
         }
-        return $this->json(['vehicle'=>$vehicle],200,[],['groups'=>['safety:read']]);
+        return $this->json(['vehicle'=>$vehicle],200,[],['groups'=>['vehicle:read']]);
     }
 
      #[Route('/api/vehicle/add/', name: 'api_vehicle_add', methods: ['POST'])]

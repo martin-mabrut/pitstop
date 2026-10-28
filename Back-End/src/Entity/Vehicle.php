@@ -36,7 +36,7 @@ class Vehicle
         type: 'string',
         message: 'The value {{ value }} is not a valid {{ type }}.',
     )]
-    #[Groups(['safety:read'])]
+    #[Groups(['safety:read','vehicle:read'])]
     private ?string $registrationNumber = null;
 
     #[ORM\Column(length: 50)]
