@@ -3,12 +3,18 @@ import { useContext, createContext, useState } from 'react';
 
 export interface Vehicle {
     id: string | number;
+    uid?: string;
+    vehicleType: string;
+    registrationNumber: string;
     brand: string;
     model: string;
-    registrationNumber?: string;
-    version?: string;
-    typeOfFuel?: string;
-    mileage?: number;
+    version: string;
+    firstRegistrationDate: string;
+    typeOfFuel: string;
+    typeOfTransmission: string;
+    mileage: number;
+    kmPerDay: number;
+    userId?: number;
 }
 
 interface VehicleContextType {

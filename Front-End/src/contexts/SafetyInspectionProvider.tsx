@@ -71,25 +71,7 @@ export const SafetyInspectionProvider = ({ children }) => {
         }
     }
 
-    const deleteSafetyInspections = async (vehicleId, safetyId, data) => {
-        try {
-            const response = await fetch(
-                `${API_URL}/${vehicleId}/${safetyId}`,
-                {
-                    // credentials: 'include',
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            );
-            const res = await response.json();
-            console.log(res);
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    
 
     return (
         // CHANGÉ : on expose aussi getSafetyInspectionsNotDone (utilisé par le Dashboard)

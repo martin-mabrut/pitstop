@@ -12,8 +12,16 @@ export default function AddVehicle({ onClose }: AddVehicleProps) {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         await addVehicle({
+            vehicleType: form.get('vehicleType') as string,
+            registrationNumber: form.get('registrationNumber') as string,
             brand: form.get('brand') as string,
             model: form.get('model') as string,
+            version: form.get('version') as string,
+            firstRegistrationDate: form.get('firstRegistrationDate') as string,
+            typeOfFuel: form.get('typeOfFuel') as string,
+            typeOfTransmission: form.get('typeOfTransmission') as string,
+            mileage: Number(form.get('mileage')),
+            kmPerDay: Number(form.get('kmPerDay')),
         });
         onClose();
     }
