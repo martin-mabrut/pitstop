@@ -22,7 +22,7 @@ export default function Signin() {
     return (
         <div className="container auth-page">
             <div className="auth-card">
-                <h1 className="auth-card__title">Inscription</h1>
+                <h1 className="auth-card__title">INSCRIPTION</h1>
                 <form onSubmit={handleSubmit}>
                     <label className="form-label w-100 mb-3">
                         Nom d'utilisateur

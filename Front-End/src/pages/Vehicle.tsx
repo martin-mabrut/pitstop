@@ -117,7 +117,7 @@ export default function VehiclePage() {
 
             <div className="vehicle-section__header">
                 <h1 className="mb-0">
-                    {vehicle.brand} {vehicle.model}
+                    {vehicle.brand.toUpperCase()} {vehicle.model.toUpperCase()}
                 </h1>
 
                 <div className="vehicle-actions">

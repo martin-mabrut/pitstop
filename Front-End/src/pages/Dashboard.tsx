@@ -29,7 +29,7 @@ export default function Dashboard() {
 
     return (
         <div className="container">
-            <h1>Dashboard</h1>
+            <h1>DASHBOARD</h1>
 
             <p>{user?.username}</p>
 

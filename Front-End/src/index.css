@@ -24,6 +24,10 @@ body {
   margin: 0;
 }
 
+h1 {
+  font-family: "Local Scotch", serif;
+}
+
 /* Boutons Bootstrap aux couleurs du projet */
 .btn-secondary {
   --bs-btn-color: var(--color-white);

@@ -19,7 +19,7 @@ export default function Login() {
     return (
         <div className="container auth-page">
             <div className="auth-card">
-                <h1 className="auth-card__title">Connexion</h1>
+                <h1 className="auth-card__title">CONNEXION</h1>
                 <form onSubmit={handleSubmit}>
                     <label className="form-label w-100 mb-3">
                         Nom d'utilisateur
