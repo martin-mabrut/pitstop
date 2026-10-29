@@ -213,6 +213,7 @@ final class SafetyInspectionController extends AbstractController
         }
         $doneAt = new DateTime($parameters['doneAt']);
         $safetyInspection->setDoneAt($doneAt);
+        $safetyInspection->setDueTimeAt($doneAt);
         $safetyInspectionNext = new SafetyInspection();
         $safetyInspectionNext->setVehicle($vehicle);
         if ($parameters['valid']) {
