@@ -31,7 +31,7 @@ export default function Dashboard() {
         <div className="container">
             <h1>DASHBOARD</h1>
 
-            <p>{user?.username}</p>
+            <h2>{user?.username.toUpperCase()}</h2>
 
             <div className="row g-3 mb-4">
                 <div className="col-12 col-lg-6">
